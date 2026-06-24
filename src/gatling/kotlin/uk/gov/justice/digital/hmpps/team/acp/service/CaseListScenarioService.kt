@@ -17,7 +17,7 @@ class CaseListScenarioService(
         pauseBeforeStart: Pair<Long, Long>,
         pauseOnCaseListPage: Pair<Long, Long>,
     ): ScenarioBuilder {
-        val caseListChainBuilder = CoreDsl.feed(caseListFeeder.getJdbcFeederForEastMidland())
+        val caseListChainBuilder = CoreDsl.feed(caseListFeeder.getJdbcFeederForCaseList())
             .exec(HttpDsl.addCookie(httpRequestHelper.acpAuthCookie!!))
             .pause(pauseBeforeStart.first, pauseBeforeStart.second)
             .exec(
