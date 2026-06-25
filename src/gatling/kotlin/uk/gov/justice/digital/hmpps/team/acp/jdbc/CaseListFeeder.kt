@@ -11,9 +11,7 @@ class CaseListFeeder (
     private val dbConfig: DbConfig = DbConfig()
 ) {
     fun getJdbcFeederForCaseList(): FeederBuilder<Any> {
-        val feederQuery = """
-            
-        """
+        val feederQuery = """select rciv.id, rciv.person_name  from referral_caselist_item_view rciv where rciv.region_name = 'NPS North East' """
         return JdbcDsl.jdbcFeeder(
             "jdbc:postgresql://localhost:${dbConfig.dbPort}/${dbConfig.dbName}",
             dbConfig.dbUsername,
