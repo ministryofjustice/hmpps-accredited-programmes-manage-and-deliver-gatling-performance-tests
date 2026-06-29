@@ -18,7 +18,7 @@ class CaseListPageOrchestrationService (
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                     "/referral-details/$referralId/personal-details"}
             .check(HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").exists()
+                CoreDsl.css("h1:contains('Referral details')").exists()
             )
 
     fun hitRisksAndNeedsPageAndDoChecks() =
@@ -27,7 +27,7 @@ class CaseListPageOrchestrationService (
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/risks-and-needs/risks-and-alerts"}
             .check(HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").exists()
+            CoreDsl.css("h1:contains('Risks and needs')").exists()
             )
 
     fun hitProgrammeNeedsIdentifierPageAndDoChecks() =
@@ -36,7 +36,7 @@ class CaseListPageOrchestrationService (
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/programme-needs-identifier"}
             .check(HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").exists()
+            CoreDsl.css("h1:contains('Programme needs identifier')").exists()
             )
 
     fun hitAvailabilityAndMotivationPageAndDoChecks() =
@@ -45,7 +45,7 @@ class CaseListPageOrchestrationService (
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/availability-and-motivation/availability"}
             .check(HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").exists()
+            CoreDsl.css("h1:contains('Availability and motivation')").exists()
             )
 
     fun hitAttendanceHistoryPageAndDoChecks() =
@@ -54,7 +54,7 @@ class CaseListPageOrchestrationService (
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/attendance-history"}
             .check(HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").exists()
+            CoreDsl.css("h1:contains('Attendance history')").exists()
             )
 
     fun hitStatusHistoryPageAndDoChecks() =
@@ -63,7 +63,10 @@ class CaseListPageOrchestrationService (
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/status-history"}
             .check(HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").exists()
+             CoreDsl.css("h1:contains('Status history')").exists()
+
             )
+
+    //referral/4c68324c-6674-4705-9b91-d3b956261ce1/update-status-scheduled
 
 }
