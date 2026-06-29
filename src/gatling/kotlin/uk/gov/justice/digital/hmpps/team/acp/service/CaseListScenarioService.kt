@@ -16,7 +16,16 @@ class CaseListScenarioService(
         scenarioName: String,
         pauseBeforeStart: Pair<Long, Long>,
         pauseOnCaseListPage: Pair<Long, Long>,
-    ): ScenarioBuilder {
+        pauseOnReferralDetailPage: Pair<Long, Long>,
+        pauseOnRisksAndNeedsPage: Pair<Long, Long>,
+        pauseOnProgrammeNeedsIdentifierPage: Pair<Long, Long>,
+        pauseOnAvailabilityAndMotivationPage: Pair<Long, Long>,
+        pauseOnAttendanceHistoryPage: Pair<Long, Long>,
+        pauseOnStatusHistoryPage: Pair<Long, Long>
+
+
+
+        ): ScenarioBuilder {
         val caseListChainBuilder = CoreDsl.feed(caseListFeeder.getJdbcFeederForCaseList())
             .exec(HttpDsl.addCookie(httpRequestHelper.acpAuthCookie!!))
             .pause(pauseBeforeStart.first, pauseBeforeStart.second)
@@ -25,6 +34,37 @@ class CaseListScenarioService(
             )
             .exitHereIfFailed()
             .pause(pauseOnCaseListPage.first, pauseOnCaseListPage.second)
+            .exec(
+                pageOrchestrationService.hitReferralDetailsPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnReferralDetailPage.first, pauseOnReferralDetailPage.second)
+            .exec (
+                pageOrchestrationService.hitRisksAndNeedsPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnRisksAndNeedsPage.first, pauseOnRisksAndNeedsPage.second)
+            .exec (
+                pageOrchestrationService.hitProgrammeNeedsIdentifierPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnProgrammeNeedsIdentifierPage.first, pauseOnProgrammeNeedsIdentifierPage.second)
+            .exec (
+                pageOrchestrationService.hitAvailabilityAndMotivationPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnAvailabilityAndMotivationPage.first, pauseOnAvailabilityAndMotivationPage.second)
+            .exec (
+                pageOrchestrationService.hitAttendanceHistoryPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnAttendanceHistoryPage.first, pauseOnAttendanceHistoryPage.second)
+            .exec (
+                pageOrchestrationService.hitStatusHistoryPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnStatusHistoryPage.first, pauseOnStatusHistoryPage.second)
+
 
         return CoreDsl.scenario(scenarioName)
             .exec(caseListChainBuilder)

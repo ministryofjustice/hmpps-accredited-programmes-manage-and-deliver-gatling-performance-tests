@@ -12,7 +12,13 @@ class CaseListSimulation(caseListScenarioService: CaseListScenarioService = Case
         val caseListScenario = caseListScenarioService.buildScenario(
             scenarioName = "Case List Journey",
             caseListPauseBeforeStart,
-            caseListPauseOnCaseListPage
+            caseListPauseOnCaseListPage,
+            caseListPauseOnReferralDetailPage,
+            caseListPauseOnRisksAndNeedsPage,
+            caseListPauseOnProgrammeNeedsIdentifierPage,
+            caseListPauseOnAvailabilityAndMotivationPage,
+            caseListPauseOnAttendanceHistoryPage,
+            caseListPauseOnStatusHistoryPage
         )
         setUp(
             caseListScenario.injectClosed(
