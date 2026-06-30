@@ -21,7 +21,8 @@ class CaseListScenarioService(
         pauseOnProgrammeNeedsIdentifierPage: Pair<Long, Long>,
         pauseOnAvailabilityAndMotivationPage: Pair<Long, Long>,
         pauseOnAttendanceHistoryPage: Pair<Long, Long>,
-        pauseOnStatusHistoryPage: Pair<Long, Long>
+        pauseOnStatusHistoryPage: Pair<Long, Long>,
+        pauseOnUpdateReferralStatusPage: Pair<Long, Long>
 
 
 
@@ -64,6 +65,12 @@ class CaseListScenarioService(
             )
             .exitHereIfFailed()
             .pause(pauseOnStatusHistoryPage.first, pauseOnStatusHistoryPage.second)
+            .exec (
+                pageOrchestrationService.getUpdateReferralStatusPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnUpdateReferralStatusPage.first, pauseOnUpdateReferralStatusPage.second)
+
 
 
         return CoreDsl.scenario(scenarioName)

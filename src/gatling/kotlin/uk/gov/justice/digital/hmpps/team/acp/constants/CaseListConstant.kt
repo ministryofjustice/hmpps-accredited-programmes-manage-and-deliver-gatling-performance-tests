@@ -12,4 +12,5 @@ val caseListPauseOnProgrammeNeedsIdentifierPage = 6L to 18L
 val caseListPauseOnAvailabilityAndMotivationPage = 7L to 20L
 val caseListPauseOnAttendanceHistoryPage = 8L to 22L
 val caseListPauseOnStatusHistoryPage = 9L to 24L
+val caseListPauseOnUpdateReferralStatusPage = 10L to 26L
 

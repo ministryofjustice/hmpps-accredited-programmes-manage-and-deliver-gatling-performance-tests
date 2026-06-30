@@ -7,13 +7,13 @@ import uk.gov.justice.digital.hmpps.team.acp.model.CaseListSimulationSession
 class CaseListPageOrchestrationService (
 ) {
     fun hitOpenReferralsPageAndDoChecks() =
-        HttpDsl.http("Open referrals Page")
+        HttpDsl.http("GET - Open referrals Page")
             .get("/region/open-referrals")
             .check(HttpDsl.status().`is` { 200 },
              CoreDsl.css("h1").find().`is`("Case list"))
 
     fun hitReferralDetailsPageAndDoChecks() =
-        HttpDsl.http("Referral details Page")
+        HttpDsl.http("GET - Referral details Page")
             .get{ session ->
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                     "/referral-details/$referralId/personal-details"}
@@ -22,7 +22,7 @@ class CaseListPageOrchestrationService (
             )
 
     fun hitRisksAndNeedsPageAndDoChecks() =
-        HttpDsl.http("Risks and needs Page")
+        HttpDsl.http("GET - Risks and needs Page")
             .get{ session ->
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/risks-and-needs/risks-and-alerts"}
@@ -31,7 +31,7 @@ class CaseListPageOrchestrationService (
             )
 
     fun hitProgrammeNeedsIdentifierPageAndDoChecks() =
-        HttpDsl.http("Programme needs identifier Page")
+        HttpDsl.http("GET - Programme needs identifier Page")
             .get{ session ->
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/programme-needs-identifier"}
@@ -40,7 +40,7 @@ class CaseListPageOrchestrationService (
             )
 
     fun hitAvailabilityAndMotivationPageAndDoChecks() =
-        HttpDsl.http("Availability and motivation Page")
+        HttpDsl.http("GET - Availability and motivation Page")
             .get{ session ->
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/availability-and-motivation/availability"}
@@ -49,7 +49,7 @@ class CaseListPageOrchestrationService (
             )
 
     fun hitAttendanceHistoryPageAndDoChecks() =
-        HttpDsl.http("Attendance history Page")
+        HttpDsl.http("GET - Attendance history Page")
             .get{ session ->
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/attendance-history"}
@@ -58,7 +58,7 @@ class CaseListPageOrchestrationService (
             )
 
     fun hitStatusHistoryPageAndDoChecks() =
-        HttpDsl.http("Status history Page")
+        HttpDsl.http("GET - Status history Page")
             .get{ session ->
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/status-history"}
@@ -67,6 +67,14 @@ class CaseListPageOrchestrationService (
 
             )
 
-    //referral/4c68324c-6674-4705-9b91-d3b956261ce1/update-status-scheduled
+     fun getUpdateReferralStatusPageAndDoChecks() =
+         HttpDsl.http("GET - Update Referral Status Page")
+             .get{ session ->
+                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
+                 "/referral/$referralId/update-status"}
+             .check(HttpDsl.status().`is` { 200 },
+                 CoreDsl.css("h1:contains('referral status')").exists()
+
+             )
 
 }

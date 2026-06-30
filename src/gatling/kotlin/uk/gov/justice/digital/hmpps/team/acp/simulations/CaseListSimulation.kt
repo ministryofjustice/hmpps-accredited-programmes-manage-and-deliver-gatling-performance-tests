@@ -18,7 +18,8 @@ class CaseListSimulation(caseListScenarioService: CaseListScenarioService = Case
             caseListPauseOnProgrammeNeedsIdentifierPage,
             caseListPauseOnAvailabilityAndMotivationPage,
             caseListPauseOnAttendanceHistoryPage,
-            caseListPauseOnStatusHistoryPage
+            caseListPauseOnStatusHistoryPage,
+            caseListPauseOnUpdateReferralStatusPage
         )
         setUp(
             caseListScenario.injectClosed(
