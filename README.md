@@ -25,7 +25,7 @@ https://github.com/ministryofjustice/hmpps-accredited-programmes-manage-and-deli
 # Running load tests
 Change directory in a terminal and navigate to this repo's root folder
 
-Run a simulation of your choice:
+Run a simulation:
 `./gradlew gatlingRun --simulation uk.gov.justice.digital.hmpps.team.acp.simulations.CaseListSimulation -Dprotocol=https -Ddomain=accredited-programmes-manage-and-deliver-dev.hmpps.service.justice.gov.uk -Ddb_port= DB_PORT_VALUE -Ddb_name=DB_NAME_VALUE -Ddb_username=DB_USER_NAME_VALUE -Ddb_password=DB_PASSWORD_VALUE -Dhmpps-accredited-programmes-manage-and-deliver-ui.session= VALUE_FROM_STEP_3`
 
 DB_PORT_VALUE = You will get this from outcome of first command for Port forwarding.
