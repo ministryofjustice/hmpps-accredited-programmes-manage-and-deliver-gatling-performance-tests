@@ -8,9 +8,11 @@ Performance test setup use the following:
 # Environment pre-requisites
 Before running load tests, consider your target environment's configuration:
 
-Should emails be disabled during load testing?
-Should domain events be disabled during load testing?
-Is the environment scaled the same as production, and does it matter? Scaling includes
+- Should emails be disabled during load testing?
+
+- Should domain events be disabled during load testing?
+
+- Is the environment scaled the same as production, and does it matter? Scaling includes
 Size of RDS instance
 Number of pods for API/UI
 Memory allocated to pods for API/UI
