@@ -1,5 +1,10 @@
 # hmpps-accredited-programmes-manage-and-deliver-gatling-performance-tests
 
+Performance test setup use the following:
+1. Kotlin
+2. Gatling
+3. Gradle
+
 # Environment pre-requisites
 Before running load tests, consider your target environment's configuration:
 
