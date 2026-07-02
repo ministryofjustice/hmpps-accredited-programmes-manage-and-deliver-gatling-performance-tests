@@ -22,11 +22,15 @@ class CaseListScenarioService(
         pauseOnAvailabilityAndMotivationPage: Pair<Long, Long>,
         pauseOnAttendanceHistoryPage: Pair<Long, Long>,
         pauseOnStatusHistoryPage: Pair<Long, Long>,
+        pauseOnLearningDisabilitiesAndChallengesPage: Pair<Long, Long>,
+        pauseAfterLearningDisabilitiesAndChallengesPage: Pair<Long, Long>,
+        pauseOnReferralDetailsWithLdcUpdatedPage: Pair<Long, Long>,
+        pauseOnUpdateCohortPage: Pair<Long, Long>,
+        pauseAfterUpdateCohortPage: Pair<Long, Long>,
+        pauseOnReferralDetailsWithCohortUpdatedPage: Pair<Long, Long>,
         pauseOnUpdateReferralStatusPage: Pair<Long, Long>
 
-
-
-        ): ScenarioBuilder {
+    ): ScenarioBuilder {
         val caseListChainBuilder = CoreDsl.feed(caseListFeeder.getJdbcFeederForCaseList())
             .exec(HttpDsl.addCookie(httpRequestHelper.acpAuthCookie!!))
             .pause(pauseBeforeStart.first, pauseBeforeStart.second)
@@ -66,12 +70,38 @@ class CaseListScenarioService(
             .exitHereIfFailed()
             .pause(pauseOnStatusHistoryPage.first, pauseOnStatusHistoryPage.second)
             .exec (
+                pageOrchestrationService.getUpdateLearningDisabilitiesAndChallengesPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnLearningDisabilitiesAndChallengesPage.first, pauseOnLearningDisabilitiesAndChallengesPage.second)
+            .exec (
+                pageOrchestrationService.postUpdateLearningDisabilitiesAndChallengesPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseAfterLearningDisabilitiesAndChallengesPage.first, pauseAfterLearningDisabilitiesAndChallengesPage.second)
+            .exec(
+                pageOrchestrationService.getReferralDetailsWithLdcUpdatedPageAndDoChecks())
+            .exitHereIfFailed()
+            .pause(pauseOnReferralDetailsWithLdcUpdatedPage.first, pauseOnReferralDetailsWithLdcUpdatedPage.second)
+            .exec (
+                pageOrchestrationService.getChangeCohortPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseOnUpdateCohortPage.first, pauseOnUpdateCohortPage.second)
+            .exec (
+                pageOrchestrationService.postChangeCohortPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauseAfterUpdateCohortPage.first, pauseAfterUpdateCohortPage.second)
+            .exec(
+                pageOrchestrationService.getReferralDetailsWithCohortUpdatedPageAndDoChecks())
+            .exitHereIfFailed()
+            .pause(pauseOnReferralDetailsWithCohortUpdatedPage.first, pauseOnReferralDetailsWithCohortUpdatedPage.second)
+            .exec (
                 pageOrchestrationService.getUpdateReferralStatusPageAndDoChecks()
             )
             .exitHereIfFailed()
             .pause(pauseOnUpdateReferralStatusPage.first, pauseOnUpdateReferralStatusPage.second)
-
-
 
         return CoreDsl.scenario(scenarioName)
             .exec(caseListChainBuilder)

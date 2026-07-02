@@ -19,13 +19,19 @@ class CaseListSimulation(caseListScenarioService: CaseListScenarioService = Case
             caseListPauseOnAvailabilityAndMotivationPage,
             caseListPauseOnAttendanceHistoryPage,
             caseListPauseOnStatusHistoryPage,
+            caseListPauseOnLearningDisabilitiesAndChallengesPage,
+            caseListPauseAfterLearningDisabilitiesAndChallengesPage,
+            caseListPauseOnReferralDetailsWithLdcUpdatedPage,
+            caseListPauseOnCohortUpdatePage,
+            caseListPauseAfterCohortUpdatePage,
+            caseListPauseOnReferralDetailsWithCohortUpdatedPage,
             caseListPauseOnUpdateReferralStatusPage
         )
         setUp(
             caseListScenario.injectClosed(
-                constantConcurrentUsers(noOfCaseListUsers).during(2.minutes.toJavaDuration())
+                constantConcurrentUsers(noOfCaseListUsers).during(5.minutes.toJavaDuration())
             )
         ).protocols(httpProtocol)
-            .maxDuration(2.minutes.toJavaDuration())
+            .maxDuration(5.minutes.toJavaDuration())
     }
 }
