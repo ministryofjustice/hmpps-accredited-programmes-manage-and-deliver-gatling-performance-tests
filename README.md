@@ -42,7 +42,7 @@ DB_USER_NAME_VALUE = You will get this from outcome of first command for Port fo
 
 DB_PASSWORD_VALUE = You will get this from outcome of first command for Port forwarding.
 
-VALUE_FROM_STEP_3 = value for key - hmpps-accredited-programmes-manage-and-deliver-ui.session
+VALUE_FROM_STEP_3 = value for key - `hmpps-accredited-programmes-manage-and-deliver-ui.session`
 
 
 
