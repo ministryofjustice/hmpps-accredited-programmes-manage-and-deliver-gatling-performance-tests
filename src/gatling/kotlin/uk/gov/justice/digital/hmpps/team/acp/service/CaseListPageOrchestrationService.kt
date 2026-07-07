@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.team.acp.service
 
+import io.gatling.core.Predef.substring
 import io.gatling.javaapi.core.CoreDsl
 import io.gatling.javaapi.http.HttpDsl
 import uk.gov.justice.digital.hmpps.team.acp.model.CaseListSimulationSession
@@ -88,8 +89,8 @@ class CaseListPageOrchestrationService (
                 "/referral/$referralId/update-learning-disabilities-and-challenges"}
             .header("content-type", "application/x-www-form-urlencoded")
             .formParam("_csrf", "#{${CaseListSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("hasLdc", ldcFlag_MayNeedAnLDCAdaptedProgramme)
-            .check(HttpDsl.status().`is` { 200 }
+            .formParam("hasLdc", LDC_FLAG_MAY_NEED_AN_LDC_ADAPTED_PROGRAMME)
+            .check(HttpDsl.status().`is` { 200 },
             )
 
     fun getReferralDetailsWithLdcUpdatedPageAndDoChecks() =
@@ -118,7 +119,7 @@ class CaseListPageOrchestrationService (
                 "/referral/$referralId/change-cohort"}
             .header("content-type", "application/x-www-form-urlencoded")
             .formParam("_csrf", "#{${CaseListSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("updatedCohort", changeCohort_GeneralOffence)
+            .formParam("updatedCohort", CHANGE_COHORT_GENERAL_OFFENCE)
             .check(HttpDsl.status().`is` { 200 }
             )
 

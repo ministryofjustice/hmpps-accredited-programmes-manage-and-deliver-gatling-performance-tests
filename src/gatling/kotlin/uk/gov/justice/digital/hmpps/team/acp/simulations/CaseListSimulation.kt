@@ -11,27 +11,13 @@ class CaseListSimulation(caseListScenarioService: CaseListScenarioService = Case
     init {
         val caseListScenario = caseListScenarioService.buildScenario(
             scenarioName = "Case List Journey",
-            caseListPauseBeforeStart,
-            caseListPauseOnCaseListPage,
-            caseListPauseOnReferralDetailPage,
-            caseListPauseOnRisksAndNeedsPage,
-            caseListPauseOnProgrammeNeedsIdentifierPage,
-            caseListPauseOnAvailabilityAndMotivationPage,
-            caseListPauseOnAttendanceHistoryPage,
-            caseListPauseOnStatusHistoryPage,
-            caseListPauseOnLearningDisabilitiesAndChallengesPage,
-            caseListPauseAfterLearningDisabilitiesAndChallengesPage,
-            caseListPauseOnReferralDetailsWithLdcUpdatedPage,
-            caseListPauseOnCohortUpdatePage,
-            caseListPauseAfterCohortUpdatePage,
-            caseListPauseOnReferralDetailsWithCohortUpdatedPage,
-            caseListPauseOnUpdateReferralStatusPage
+            caseListPauseConfig
         )
         setUp(
             caseListScenario.injectClosed(
-                constantConcurrentUsers(noOfCaseListUsers).during(5.minutes.toJavaDuration())
+                constantConcurrentUsers(NO_OF_CASE_LIST_USERS).during(TEST_DURATION_MINUTES.minutes.toJavaDuration())
             )
         ).protocols(httpProtocol)
-            .maxDuration(5.minutes.toJavaDuration())
+            .maxDuration(TEST_DURATION_MINUTES.minutes.toJavaDuration())
     }
 }
