@@ -99,7 +99,7 @@ class CaseListPageOrchestrationService (
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral-details/$referralId/personal-details?isLdcUpdated=true"}
             .check(HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1:contains('Referral details')").exists(),
+                CoreDsl.css("h2.moj-alert__heading").`is`("LDC status changed")
             )
 
     fun getChangeCohortPageAndDoChecks() =
@@ -129,7 +129,7 @@ class CaseListPageOrchestrationService (
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral-details/$referralId/personal-details?isCohortUpdated=true"}
             .check(HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1:contains('Referral details')").exists(),
+                CoreDsl.css("h2.moj-alert__heading").`is`("Cohort changed")
             )
 
     fun getUpdateReferralStatusPageAndDoChecks() =
