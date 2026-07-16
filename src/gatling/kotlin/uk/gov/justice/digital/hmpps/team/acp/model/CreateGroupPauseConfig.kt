@@ -21,4 +21,6 @@ data class CreateGroupPauseConfig(
     val onGroupFacilitatorsPage: Pair<Long, Long>,
     val afterGroupFacilitatorsPage: Pair<Long, Long>,
     val onGroupReviewDetailsPage: Pair<Long, Long>,
+    val afterGroupReviewDetailsPage: Pair<Long, Long>,
+    val onGroupCreatedPage: Pair<Long, Long>
     )

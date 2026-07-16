@@ -4,13 +4,17 @@ import io.gatling.javaapi.core.CoreDsl
 import io.gatling.javaapi.core.ScenarioBuilder
 import io.gatling.javaapi.http.HttpDsl
 import uk.gov.justice.digital.hmpps.helper.HttpRequestHelper
+import uk.gov.justice.digital.hmpps.team.acp.jdbc.CreateGroupRepository
 import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupPauseConfig
+import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupSimulationSession
+import uk.gov.justice.digital.hmpps.team.acp.helper.GroupCodeGenerator
 
 class CreateGroupScenarioService(
     private val httpRequestHelper: HttpRequestHelper = HttpRequestHelper(),
+    private val createGroupRepository: CreateGroupRepository = CreateGroupRepository(),
     private val pageOrchestrationService: CreateGroupPageOrchestrationService = CreateGroupPageOrchestrationService()
-) {
 
+) {
     fun buildScenario(
         scenarioName: String,
         pauses: CreateGroupPauseConfig
@@ -20,7 +24,7 @@ class CreateGroupScenarioService(
             "acpAuthCookie is null — did you pass -Dhmpps-accredited-programmes-manage-and-deliver-ui.session=<session-cookie>?"
         }
 
-        val caseListChainBuilder = CoreDsl.exec(HttpDsl.addCookie(cookie))
+        val createGroupChainBuilder = CoreDsl.exec(HttpDsl.addCookie(cookie))
             .pause(pauses.beforeStart.first, pauses.beforeStart.second)
             .exec(
                 pageOrchestrationService.getCreateGroupPageAndDoChecks()
@@ -37,6 +41,13 @@ class CreateGroupScenarioService(
             )
             .exitHereIfFailed()
             .pause(pauses.onCreateGroupCodePage.first, pauses.onCreateGroupCodePage.second)
+            .exec { session ->
+                val groupCode = GroupCodeGenerator.next()
+                session.set(
+                    CreateGroupSimulationSession.GROUP_CODE.sessionKey,
+                    groupCode
+                )
+            }
             .exec(
                 pageOrchestrationService.postCreateGroupCodePageAndDoChecks()
             )
@@ -117,8 +128,39 @@ class CreateGroupScenarioService(
             )
             .exitHereIfFailed()
             .pause(pauses.onGroupReviewDetailsPage.first, pauses.onGroupReviewDetailsPage.second)
+            .exec(
+                pageOrchestrationService.postGroupReviewDetailsPageAndDoChecks()
+            )
+            .exitHereIfFailed()
+            .pause(pauses.afterGroupReviewDetailsPage.first, pauses.afterGroupReviewDetailsPage.second)
+            .exec { session ->
+
+                val groupCode = requireNotNull(
+                    session.getString(CreateGroupSimulationSession.GROUP_CODE.sessionKey)
+                ) {
+                    "GROUP_CODE is missing from Gatling session"
+                }
+                println("******** GROUP CODE = $groupCode")
+
+                val groupId = requireNotNull(
+                    createGroupRepository.findGroupIdByCode(groupCode)
+                ) {
+                    "Group ID not found for group code: $groupCode"
+                }
+                println("******** GROUP ID = $groupId")
+
+                session.set(
+                    CreateGroupSimulationSession.GROUP_ID.sessionKey,
+                    groupId.toString()
+                )
+            }
+            .exec(
+               pageOrchestrationService.getGroupCreatedPageAndDoChecks()
+            )
+           .exitHereIfFailed()
+            .pause(pauses.onGroupCreatedPage.first, pauses.onGroupCreatedPage.second)
 
         return CoreDsl.scenario(scenarioName)
-            .exec(caseListChainBuilder)
+            .exec(createGroupChainBuilder)
     }
 }

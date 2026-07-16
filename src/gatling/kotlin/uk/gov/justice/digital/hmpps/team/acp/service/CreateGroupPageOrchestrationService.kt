@@ -39,7 +39,7 @@ class CreateGroupPageOrchestrationService(
         HttpDsl.http("POST - Create a group code Page")
             .post { "/create-group-code" }
             .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-code", CREATE_GROUP_CODE)
+            .formParam("create-group-code", "#{groupCode}")
             .check(HttpDsl.status().`is` { 200 }
             )
 
@@ -166,11 +166,35 @@ class CreateGroupPageOrchestrationService(
             )
 
     fun getGroupReviewDetailsPageAndDoChecks() =
-        HttpDsl.http("GET - Review your group details")
+        HttpDsl.http("GET - Review your group details Page")
             .get("/group-review-details")
             .check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Review your group details"),
+                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey)
+            )
+
+    fun postGroupReviewDetailsPageAndDoChecks() =
+        HttpDsl.http("POST - Review your group details Page")
+            .post { "/group-review-details" }
+            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .check(HttpDsl.status().`is` { 200 }
+            )
+
+    fun getGroupCreatedPageAndDoChecks() =
+        HttpDsl.http("GET - group created Page")
+            .get{ session ->
+        val groupId = session.getString(CreateGroupSimulationSession.GROUP_ID.sessionKey)
+        val groupCode = session.getString(CreateGroupSimulationSession.GROUP_CODE.sessionKey)
+        "/group/$groupId/schedule-overview?message=Group $groupCode created"}
+            .check(
+                HttpDsl.status().`is` { 200 },
+                CoreDsl.css("div.moj-alert__content")
+                    .find()
+                    .`is` { session ->
+                        val groupCode = session.getString(CreateGroupSimulationSession.GROUP_CODE.sessionKey)
+                        "Group $groupCode created"
+                    },
                 acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey)
             )
 }
