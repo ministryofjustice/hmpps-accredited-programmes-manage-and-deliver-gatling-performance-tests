@@ -14,8 +14,11 @@ gatling {
     }
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+kotlin {
+    jvmToolchain(25)
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xannotation-default-target=param-property")
+    }
 }
 
 repositories {
