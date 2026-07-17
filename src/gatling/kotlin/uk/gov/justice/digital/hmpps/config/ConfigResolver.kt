@@ -18,9 +18,10 @@ object ConfigResolver {
 
     private val fileProperties: Properties by lazy {
         Properties().apply {
-            val path = System.getProperty(CONFIG_FILE_KEY)
-                ?: System.getenv(CONFIG_FILE_KEY.toEnvVarName())
-                ?: DEFAULT_CONFIG_FILE
+            val path =
+                System.getProperty(CONFIG_FILE_KEY)
+                    ?: System.getenv(CONFIG_FILE_KEY.toEnvVarName())
+                    ?: DEFAULT_CONFIG_FILE
             val file = File(path)
             if (file.exists()) {
                 file.reader().use { load(it) }
@@ -33,14 +34,16 @@ object ConfigResolver {
             ?: System.getenv(key.toEnvVarName())
             ?: fileProperties.getProperty(key)?.takeIf { it.isNotBlank() }
 
-    fun require(key: String): String = get(key) ?: error(
-        "Configuration value '$key' is not set. Provide it via -D$key=<value>, " +
-            "the ${key.toEnvVarName()} environment variable, or an entry in $DEFAULT_CONFIG_FILE " +
-            "(copy local.properties.example to get started)."
-    )
+    fun require(key: String): String =
+        get(key) ?: error(
+            "Configuration value '$key' is not set. Provide it via -D$key=<value>, " +
+                "the ${key.toEnvVarName()} environment variable, or an entry in $DEFAULT_CONFIG_FILE " +
+                "(copy local.properties.example to get started).",
+        )
 
-    fun requireInt(key: String): Int = require(key).toIntOrNull()
-        ?: error("Configuration value '$key' must be a valid integer.")
+    fun requireInt(key: String): Int =
+        require(key).toIntOrNull()
+            ?: error("Configuration value '$key' must be a valid integer.")
 
     private fun String.toEnvVarName() = uppercase().replace(Regex("[^A-Z0-9]"), "_")
 }
