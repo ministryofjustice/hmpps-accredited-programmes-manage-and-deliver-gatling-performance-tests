@@ -9,6 +9,9 @@
 build/
 bin/
 
+# Local run configuration
+local.properties
+
 # Mac
 *.DS_Store
 

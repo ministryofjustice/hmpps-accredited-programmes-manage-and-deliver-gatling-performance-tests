@@ -31,22 +31,61 @@ https://github.com/ministryofjustice/hmpps-accredited-programmes-manage-and-deli
   - Find the `hmpps-accredited-programmes-manage-and-deliver-ui.session` cookie in the list and copy its' value from the Value column
   - Copy the value to run load test in next step
 
+# Configuration
+
+Every setting (target environment, database connection, session cookie, load profile) is resolved
+in this order of precedence:
+
+1. JVM system property — e.g. `-Ddb_port=5433`
+2. Environment variable — the key in UPPER_SNAKE_CASE, e.g. `db_port` → `DB_PORT`
+3. `local.properties` file in the repo root (gitignored)
+
+For local development, copy the template and fill in the values from the prep steps above:
+
+```
+cp local.properties.example local.properties
+```
+
+`local.properties` is gitignored because it holds secrets (database password, session cookie) —
+never commit it. Anything set in the file can still be overridden per-run with `-D` flags or
+environment variables.
+
 # Running load tests
-Change directory in a terminal and navigate to this repo's root folder
 
-Run a simulation:
+## From IntelliJ
 
-`./gradlew gatlingRun --simulation uk.gov.justice.digital.hmpps.team.acp.simulations.CaseListSimulation -Dprotocol=https -Ddomain=accredited-programmes-manage-and-deliver-dev.hmpps.service.justice.gov.uk -Ddb_port= DB_PORT_VALUE -Ddb_name=DB_NAME_VALUE -Ddb_username=DB_USER_NAME_VALUE -Ddb_password=DB_PASSWORD_VALUE -Dhmpps-accredited-programmes-manage-and-deliver-ui.session= VALUE_FROM_STEP_3`
+A shared run configuration **Gatling: CaseListSimulation** is committed in the `.run/` folder and
+appears automatically in the run configuration dropdown. Fill in `local.properties` (see above) and
+run it. Individual values can also be set as environment variables in the run configuration's
+"Environment variables" field (Edit Configuration → Environment variables), using the
+UPPER_SNAKE_CASE names.
 
-DB_PORT_VALUE = You will get this from outcome of first command for Port forwarding.
+## From the command line
 
-DB_NAME_VALUE = You will get this from outcome of first command for Port forwarding.
+```
+./gradlew gatlingRun --simulation uk.gov.justice.digital.hmpps.team.acp.simulations.CaseListSimulation
+```
 
-DB_USER_NAME_VALUE = You will get this from outcome of first command for Port forwarding.
+With `local.properties` in place no other arguments are needed. Individual values can be
+overridden per-run, e.g.:
 
-DB_PASSWORD_VALUE = You will get this from outcome of first command for Port forwarding.
+```
+./gradlew gatlingRun --simulation uk.gov.justice.digital.hmpps.team.acp.simulations.CaseListSimulation -Dconcurrent_users=5 -Dtest_duration_minutes=10
+```
 
-VALUE_FROM_STEP_3 = value for key - `hmpps-accredited-programmes-manage-and-deliver-ui.session`
+## Available settings
+
+| Key | Required | Description |
+|-----|----------|-------------|
+| `protocol` | yes | `https` (or `http` for local) |
+| `domain` | yes | Target host, e.g. `accredited-programmes-manage-and-deliver-dev.hmpps.service.justice.gov.uk` |
+| `db_port` | yes | Local port from the port-forward step |
+| `db_name` | yes | From the port-forward step |
+| `db_username` | yes | From the port-forward step |
+| `db_password` | yes | From the port-forward step |
+| `hmpps-accredited-programmes-manage-and-deliver-ui.session` | yes | Session cookie value from the browser (prep step 3) |
+| `concurrent_users` | no (default 2) | Number of concurrent virtual users |
+| `test_duration_minutes` | no (default 5) | Test duration in minutes |
 
 
 

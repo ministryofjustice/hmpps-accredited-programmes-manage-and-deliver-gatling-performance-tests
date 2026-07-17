@@ -1,9 +1,10 @@
 package uk.gov.justice.digital.hmpps.team.acp.constants
 
+import uk.gov.justice.digital.hmpps.config.ConfigResolver
 import uk.gov.justice.digital.hmpps.team.acp.model.CaseListPauseConfig
 
-val NO_OF_CASE_LIST_USERS: Int = System.getProperty("concurrent_users")?.toIntOrNull() ?: 2
-val TEST_DURATION_MINUTES: Long = System.getProperty("test_duration_minutes")?.toLongOrNull() ?: 5L
+val NO_OF_CASE_LIST_USERS: Int = ConfigResolver.get("concurrent_users")?.toIntOrNull() ?: 2
+val TEST_DURATION_MINUTES: Long = ConfigResolver.get("test_duration_minutes")?.toLongOrNull() ?: 5L
 
 val caseListPauseConfig = CaseListPauseConfig(
     beforeStart = 0L to 2L,

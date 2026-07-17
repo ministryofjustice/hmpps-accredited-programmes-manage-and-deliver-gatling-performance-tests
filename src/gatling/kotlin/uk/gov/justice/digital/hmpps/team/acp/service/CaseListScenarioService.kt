@@ -19,7 +19,8 @@ class CaseListScenarioService(
 
     ): ScenarioBuilder {
         val cookie = checkNotNull(httpRequestHelper.acpAuthCookie) {
-            "acpAuthCookie is null — did you pass -Dhmpps-accredited-programmes-manage-and-deliver-ui.session=<session-cookie>?"
+            "acpAuthCookie is null — set hmpps-accredited-programmes-manage-and-deliver-ui.session " +
+                "in local.properties or pass it as -Dhmpps-accredited-programmes-manage-and-deliver-ui.session=<session-cookie>"
         }
 
         val caseListChainBuilder = CoreDsl.feed(caseListFeeder.getJdbcFeederForCaseList())
