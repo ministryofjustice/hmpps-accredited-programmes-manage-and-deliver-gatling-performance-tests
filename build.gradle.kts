@@ -4,6 +4,8 @@ plugins {
 
     // The following line allows to load io.gatling.gradle plugin and directly apply it
     id("io.gatling.gradle") version "3.15.1.1"
+
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 }
 
 gatling {
