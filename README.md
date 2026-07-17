@@ -5,6 +5,8 @@ Performance test setup use the following:
 2. Gatling
 3. Gradle
 
+Requires JDK 25 (the Gradle Java toolchain is pinned to 25).
+
 # Environment pre-requisites
 Before running load tests, consider your target environment's configuration:
 
