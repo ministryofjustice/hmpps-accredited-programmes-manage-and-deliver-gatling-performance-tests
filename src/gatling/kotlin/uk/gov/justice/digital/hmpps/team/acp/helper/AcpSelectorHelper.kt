@@ -5,9 +5,9 @@ import io.gatling.javaapi.core.CoreDsl
 
 class AcpSelectorHelper {
     fun getCsrfHiddenFieldValue(sessionKey: String): Final =
-        CoreDsl.css("input[name='_csrf']", "value")
+        CoreDsl
+            .css("input[name='_csrf']", "value")
             .find()
             .notNull()
             .saveAs(sessionKey)
-
 }

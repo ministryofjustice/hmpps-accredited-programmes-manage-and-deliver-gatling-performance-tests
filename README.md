@@ -87,6 +87,22 @@ overridden per-run, e.g.:
 | `concurrent_users` | no (default 2) | Number of concurrent virtual users |
 | `test_duration_minutes` | no (default 5) | Test duration in minutes |
 
+# Code style
+
+Kotlin code style is enforced with [ktlint](https://pinterest.github.io/ktlint/) via the
+same Gradle plugin our other HMPPS repos use:
+
+```
+./gradlew ktlintCheck    # report violations
+./gradlew ktlintFormat   # auto-fix what can be fixed
+```
+
+To run the formatter automatically before every commit, install the git hook once:
+
+```
+./gradlew addKtlintFormatGitPreCommitHook
+```
+
 
 
 

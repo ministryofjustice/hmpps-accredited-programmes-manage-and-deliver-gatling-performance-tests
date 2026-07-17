@@ -16,4 +16,4 @@ data class CaseListPauseConfig(
     val afterCohortUpdatePage: Pair<Long, Long>,
     val onReferralDetailsWithCohortUpdatedPage: Pair<Long, Long>,
     val onUpdateReferralStatusPage: Pair<Long, Long>,
-    )
+)
