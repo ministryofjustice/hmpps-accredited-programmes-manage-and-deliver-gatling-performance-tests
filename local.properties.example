@@ -1,0 +1,24 @@
+# Copy this file to local.properties and fill in the values.
+#
+# Every setting is resolved in this order of precedence:
+#   1. JVM system property        -Ddb_port=5433
+#   2. Environment variable       key in UPPER_SNAKE_CASE, e.g. db_port -> DB_PORT
+#   3. This file                  db_port=5433
+# So anything set here can still be overridden per-run from the command line or CI.
+
+# Target environment
+protocol=https
+domain=accredited-programmes-manage-and-deliver-dev.hmpps.service.justice.gov.uk
+
+# Database — values come from the port-forward setup (see README "Prep for running load test")
+db_port=
+db_name=
+db_username=
+db_password=
+
+# Session cookie copied from the browser after signing in (see README)
+hmpps-accredited-programmes-manage-and-deliver-ui.session=
+
+# Optional load overrides (defaults shown)
+#concurrent_users=2
+#test_duration_minutes=5

@@ -1,10 +1,8 @@
 package uk.gov.justice.digital.hmpps.config
 
 data class HttpRequestConfig(
-    val protocol: String = System.getProperty("protocol")
-        ?: error("System property 'protocol' must be set. Pass -Dprotocol=<value>"),
-    val domain: String = System.getProperty("domain")
-        ?: error("System property 'domain' must be set. Pass -Ddomain=<value>"),
+    val protocol: String = ConfigResolver.require("protocol"),
+    val domain: String = ConfigResolver.require("domain"),
     val acceptHeader: String = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     val acceptLanguageHeader: String = "en-US,en;q=0.5",
     val acceptEncodingHeader: String = "gzip, deflate",
