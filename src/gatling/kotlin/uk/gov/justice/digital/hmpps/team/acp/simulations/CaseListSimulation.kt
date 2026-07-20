@@ -17,6 +17,7 @@ class CaseListSimulation(
             caseListScenarioService.buildScenario(
                 scenarioName = "Case List Journey",
                 caseListPauseConfig,
+                TEST_DURATION_MINUTES.minutes.toJavaDuration(),
             )
         setUp(
             caseListScenario.injectClosed(

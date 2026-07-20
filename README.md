@@ -1,6 +1,7 @@
 # hmpps-accredited-programmes-manage-and-deliver-gatling-performance-tests
 
 Performance test setup use the following:
+
 1. Kotlin
 2. Gatling
 3. Gradle
@@ -8,6 +9,7 @@ Performance test setup use the following:
 Requires JDK 25 (the Gradle Java toolchain is pinned to 25).
 
 # Environment pre-requisites
+
 Before running load tests, consider your target environment's configuration:
 
 - Should emails be disabled during load testing?
@@ -15,21 +17,18 @@ Before running load tests, consider your target environment's configuration:
 - Should domain events be disabled during load testing?
 
 - Is the environment scaled the same as production, and does it matter? Scaling includes
-Size of RDS instance
-Number of pods for API/UI
-Memory allocated to pods for API/UI
+  Size of RDS instance
+  Number of pods for API/UI
+  Memory allocated to pods for API/UI
 
 # Prep for running load test
+
 To kick off the load tests you will need to do the following:
 
-1. Port forward to Access the TEST RDS Database. Follow guide here - 
-https://github.com/ministryofjustice/hmpps-accredited-programmes-manage-and-deliver-api/blob/main/docs/how-to/access-dev-database-remotely.md
-2. Copy the `hmpps-accredited-programmes-manage-and-deliver-ui.session` Application cookie from your web browser
-3. Login to your web application
-  - Right-click browser > Inspect
-  - Go to Application tab > Storage in left nav > Expand Cookies
-  - Find the `hmpps-accredited-programmes-manage-and-deliver-ui.session` cookie in the list and copy its' value from the Value column
-  - Copy the value to run load test in next step
+1. Port forward to Access the TEST RDS Database. Follow guide here -
+   https://github.com/ministryofjustice/hmpps-accredited-programmes-manage-and-deliver-api/blob/main/docs/how-to/access-dev-database-remotely.md
+2. Populate the`auth_username` and `auth_password` values in `local.properties` with the appropriate test user for the
+   environment.
 
 # Configuration
 
@@ -75,17 +74,29 @@ overridden per-run, e.g.:
 
 ## Available settings
 
-| Key | Required | Description |
-|-----|----------|-------------|
-| `protocol` | yes | `https` (or `http` for local) |
-| `domain` | yes | Target host, e.g. `accredited-programmes-manage-and-deliver-dev.hmpps.service.justice.gov.uk` |
-| `db_port` | yes | Local port from the port-forward step |
-| `db_name` | yes | From the port-forward step |
-| `db_username` | yes | From the port-forward step |
-| `db_password` | yes | From the port-forward step |
-| `hmpps-accredited-programmes-manage-and-deliver-ui.session` | yes | Session cookie value from the browser (prep step 3) |
-| `concurrent_users` | no (default 2) | Number of concurrent virtual users |
-| `test_duration_minutes` | no (default 5) | Test duration in minutes |
+| Key                                                         | Required             | Description                                                                                   |
+|-------------------------------------------------------------|----------------------|-----------------------------------------------------------------------------------------------|
+| `protocol`                                                  | yes                  | `https` (or `http` for local)                                                                 |
+| `domain`                                                    | yes                  | Target host, e.g. `accredited-programmes-manage-and-deliver-dev.hmpps.service.justice.gov.uk` |
+| `db_port`                                                   | yes                  | Local port from the port-forward step                                                         |
+| `db_name`                                                   | yes                  | From the port-forward step                                                                    |
+| `db_username`                                               | yes                  | From the port-forward step                                                                    |
+| `db_password`                                               | yes                  | From the port-forward step                                                                    |
+| `auth_username`                                             | yes                  | HMPPS Auth test account username, used by each virtual user to sign in                        |
+| `auth_password`                                             | yes                  | HMPPS Auth test account password                                                              |
+| `authBaseUrl`                                               | no (defaults to dev) | HMPPS Auth base URL, e.g. `https://sign-in-dev.hmpps.service.justice.gov.uk`                  |
+| `hmpps-accredited-programmes-manage-and-deliver-ui.session` | no                   | Debug override: skip sign-in and share this browser session cookie across all virtual users   |
+| `concurrent_users`                                          | no (default 2)       | Number of concurrent virtual users                                                            |
+| `test_duration_minutes`                                     | no (default 5)       | Test duration in minutes                                                                      |
+
+# Troubleshooting
+
+If a run fails and the report alone doesn't explain why, set the `GATLING_HTTP_LOG` environment
+variable to `DEBUG` to log every failing HTTP request and response body (`TRACE` logs all
+requests). Warning: logged sign-in requests include the credentials, so don't share the output.
+
+A failed sign-in prints the URL it landed on to the console — landing on
+`.../auth/sign-in?error=invalid` means HMPPS Auth rejected the username/password.
 
 # Code style
 
