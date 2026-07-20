@@ -16,8 +16,15 @@ db_name=
 db_username=
 db_password=
 
-# Session cookie copied from the browser after signing in (see README)
-hmpps-accredited-programmes-manage-and-deliver-ui.session=
+auth_username=
+auth_password=
+
+# Optional: HMPPS Auth base URL (defaults to the dev sign-in service)
+#authBaseUrl=https://sign-in-dev.hmpps.service.justice.gov.uk
+
+# Optional debug override: reuse an existing session cookie (copied from the browser) instead of
+# signing in. If set, the sign-in step is skipped and ALL virtual users share this one session.
+#hmpps-accredited-programmes-manage-and-deliver-ui.session=
 
 # Optional load overrides (defaults shown)
 #concurrent_users=2

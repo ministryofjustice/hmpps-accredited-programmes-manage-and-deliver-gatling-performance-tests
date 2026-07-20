@@ -4,88 +4,68 @@ import io.gatling.javaapi.core.CoreDsl
 import io.gatling.javaapi.core.ScenarioBuilder
 import io.gatling.javaapi.http.HttpDsl
 import uk.gov.justice.digital.hmpps.helper.HttpRequestHelper
+import uk.gov.justice.digital.hmpps.service.SignInService
 import uk.gov.justice.digital.hmpps.team.acp.jdbc.CaseListFeeder
 import uk.gov.justice.digital.hmpps.team.acp.model.CaseListPauseConfig
+import java.time.Duration
 
 class CaseListScenarioService(
     private val caseListFeeder: CaseListFeeder = CaseListFeeder(),
     private val httpRequestHelper: HttpRequestHelper = HttpRequestHelper(),
+    private val signInService: SignInService = SignInService(),
     private val pageOrchestrationService: CaseListPageOrchestrationService = CaseListPageOrchestrationService(),
 ) {
     fun buildScenario(
         scenarioName: String,
         pauses: CaseListPauseConfig,
+        journeyDuration: Duration,
     ): ScenarioBuilder {
-        val cookie =
-            checkNotNull(httpRequestHelper.acpAuthCookie) {
-                "acpAuthCookie is null — set hmpps-accredited-programmes-manage-and-deliver-ui.session " +
-                    "in local.properties or pass it as -Dhmpps-accredited-programmes-manage-and-deliver-ui.session=<session-cookie>"
-            }
+        // Authenticate via HMPPS-Auth
+        val authenticate =
+            httpRequestHelper.acpAuthCookie
+                ?.let { CoreDsl.exec(HttpDsl.addCookie(it)) }
+                ?: signInService.signIn()
 
-        val caseListChainBuilder =
+        // Traverse case list and referral details pages
+        val singleCaseListJourney =
             CoreDsl
                 .feed(caseListFeeder.getJdbcFeederForCaseList())
-                .exec(HttpDsl.addCookie(cookie))
                 .pause(pauses.beforeStart.first, pauses.beforeStart.second)
-                .exec(
-                    pageOrchestrationService.getOpenReferralsPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getOpenReferralsPageAndDoChecks())
                 .pause(pauses.onCaseListPage.first, pauses.onCaseListPage.second)
-                .exec(
-                    pageOrchestrationService.getReferralDetailsPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getReferralDetailsPageAndDoChecks())
                 .pause(pauses.onReferralDetailPage.first, pauses.onReferralDetailPage.second)
-                .exec(
-                    pageOrchestrationService.getRisksAndNeedsPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getRisksAndNeedsPageAndDoChecks())
                 .pause(pauses.onRisksAndNeedsPage.first, pauses.onRisksAndNeedsPage.second)
-                .exec(
-                    pageOrchestrationService.getProgrammeNeedsIdentifierPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getProgrammeNeedsIdentifierPageAndDoChecks())
                 .pause(pauses.onProgrammeNeedsIdentifierPage.first, pauses.onProgrammeNeedsIdentifierPage.second)
-                .exec(
-                    pageOrchestrationService.getAvailabilityAndMotivationPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getAvailabilityAndMotivationPageAndDoChecks())
                 .pause(pauses.onAvailabilityAndMotivationPage.first, pauses.onAvailabilityAndMotivationPage.second)
-                .exec(
-                    pageOrchestrationService.getAttendanceHistoryPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getAttendanceHistoryPageAndDoChecks())
                 .pause(pauses.onAttendanceHistoryPage.first, pauses.onAttendanceHistoryPage.second)
-                .exec(
-                    pageOrchestrationService.getStatusHistoryPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getStatusHistoryPageAndDoChecks())
                 .pause(pauses.onStatusHistoryPage.first, pauses.onStatusHistoryPage.second)
-                .exec(
-                    pageOrchestrationService.getUpdateLearningDisabilitiesAndChallengesPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getUpdateLearningDisabilitiesAndChallengesPageAndDoChecks())
                 .pause(pauses.onLearningDisabilitiesAndChallengesPage.first, pauses.onLearningDisabilitiesAndChallengesPage.second)
-                .exec(
-                    pageOrchestrationService.postUpdateLearningDisabilitiesAndChallengesPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.postUpdateLearningDisabilitiesAndChallengesPageAndDoChecks())
                 .pause(pauses.afterLearningDisabilitiesAndChallengesPage.first, pauses.afterLearningDisabilitiesAndChallengesPage.second)
-                .exec(
-                    pageOrchestrationService.getReferralDetailsWithLdcUpdatedPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getReferralDetailsWithLdcUpdatedPageAndDoChecks())
                 .pause(pauses.onReferralDetailsWithLdcUpdatedPage.first, pauses.onReferralDetailsWithLdcUpdatedPage.second)
-                .exec(
-                    pageOrchestrationService.getChangeCohortPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getChangeCohortPageAndDoChecks())
                 .pause(pauses.onCohortUpdatePage.first, pauses.onCohortUpdatePage.second)
-                .exec(
-                    pageOrchestrationService.postChangeCohortPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.postChangeCohortPageAndDoChecks())
                 .pause(pauses.afterCohortUpdatePage.first, pauses.afterCohortUpdatePage.second)
-                .exec(
-                    pageOrchestrationService.getReferralDetailsWithCohortUpdatedPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getReferralDetailsWithCohortUpdatedPageAndDoChecks())
                 .pause(pauses.onReferralDetailsWithCohortUpdatedPage.first, pauses.onReferralDetailsWithCohortUpdatedPage.second)
-                .exec(
-                    pageOrchestrationService.getUpdateReferralStatusPageAndDoChecks(),
-                ).exitHereIfFailed()
+                .exec(pageOrchestrationService.getUpdateReferralStatusPageAndDoChecks())
                 .pause(pauses.onUpdateReferralStatusPage.first, pauses.onUpdateReferralStatusPage.second)
 
         return CoreDsl
             .scenario(scenarioName)
-            .exec(caseListChainBuilder)
+            .exec(authenticate)
+            .during(journeyDuration)
+            .on(
+                CoreDsl.exitBlockOnFail().on(singleCaseListJourney),
+            )
     }
 }
