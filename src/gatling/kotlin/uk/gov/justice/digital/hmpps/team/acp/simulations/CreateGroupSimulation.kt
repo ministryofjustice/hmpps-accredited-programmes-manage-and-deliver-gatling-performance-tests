@@ -1,24 +1,29 @@
 package uk.gov.justice.digital.hmpps.team.acp.simulations
 
-import io.gatling.javaapi.core.CoreDsl
+import io.gatling.javaapi.core.CoreDsl.constantConcurrentUsers
 import uk.gov.justice.digital.hmpps.BaseSimulationFrontEndRoutes
+import uk.gov.justice.digital.hmpps.team.acp.constants.CREATE_GROUP_TEST_DURATION_MINUTES
+import uk.gov.justice.digital.hmpps.team.acp.constants.NO_OF_CREATE_GROUP_USERS
+import uk.gov.justice.digital.hmpps.team.acp.constants.createGroupPauseConfig
 import uk.gov.justice.digital.hmpps.team.acp.service.CreateGroupScenarioService
-import uk.gov.justice.digital.hmpps.team.acp.constants.*
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.toJavaDuration
+import java.time.Duration
 
-class CreateGroupSimulation(createGroupScenarioService: CreateGroupScenarioService = CreateGroupScenarioService()): BaseSimulationFrontEndRoutes() {
+class CreateGroupSimulation(
+    createGroupScenarioService: CreateGroupScenarioService = CreateGroupScenarioService(),
+) : BaseSimulationFrontEndRoutes() {
     init {
-        val createGroupScenario = createGroupScenarioService.buildScenario(
-            scenarioName = "Create Group Journey",
-            createGroupPauseConfig
-        )
+        val testDuration = Duration.ofMinutes(CREATE_GROUP_TEST_DURATION_MINUTES)
+        val createGroupScenario =
+            createGroupScenarioService.buildScenario(
+                scenarioName = "Create Group Journey",
+                createGroupPauseConfig,
+                testDuration,
+            )
         setUp(
             createGroupScenario.injectClosed(
-                CoreDsl.constantConcurrentUsers(NO_OF_CREATE_GROUP_USERS)
-                    .during(CREATE_GROUP_TEST_DURATION_MINUTES.minutes.toJavaDuration())
-            )
+                constantConcurrentUsers(NO_OF_CREATE_GROUP_USERS).during(testDuration),
+            ),
         ).protocols(httpProtocol)
-            .maxDuration(CREATE_GROUP_TEST_DURATION_MINUTES.minutes.toJavaDuration())
+            .maxDuration(testDuration)
     }
 }

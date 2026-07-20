@@ -1,36 +1,36 @@
 package uk.gov.justice.digital.hmpps.team.acp.constants
 
+import uk.gov.justice.digital.hmpps.config.ConfigResolver
 import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupPauseConfig
-import kotlin.Long
 
+val NO_OF_CREATE_GROUP_USERS: Int = ConfigResolver.get("create_group_concurrent_users")?.toIntOrNull() ?: 1
+val CREATE_GROUP_TEST_DURATION_MINUTES: Long = ConfigResolver.get("create_group_test_duration_minutes")?.toLongOrNull() ?: 5L
 
-val NO_OF_CREATE_GROUP_USERS: Int =  1
-val CREATE_GROUP_TEST_DURATION_MINUTES: Long = System.getProperty("create_group_test_duration_minutes")?.toLongOrNull() ?: 5L
-
-val createGroupPauseConfig = CreateGroupPauseConfig(
-    beforeStart = 0L to 2L,
-    onCreateGroupPage = 2L to 5L,
-    afterCreateGroupPage = 2L to 5L,
-    onCreateGroupCodePage = 2L to 5L,
-    afterCreateGroupCodePage = 2L to 5L,
-    onGroupStartDatePage = 2L to 5L,
-    afterGroupStartDatePage = 2L to 5L,
-    onGroupDaysAndTimesPage = 3L to 6L,
-    afterGroupDaysAndTimesPage = 3L to 6L,
-    onGroupCohortPage = 3L to 6L,
-    afterGroupCohortPage = 3L to 6L,
-    onGroupGenderPage = 3L to 6L,
-    afterGroupGenderPage = 3L to 6L,
-    onProbationDeliveryUnitPage = 3L to 6L,
-    afterProbationDeliveryUnitPage = 3L to 6L,
-    onDeliveryLocationPage = 3L to 6L,
-    afterDeliveryLocationPage = 3L to 6L,
-    onGroupFacilitatorsPage = 3L to 6L,
-    afterGroupFacilitatorsPage = 3L to 6L,
-    onGroupReviewDetailsPage = 3L to 6L,
-    afterGroupReviewDetailsPage = 3L to 6L,
-    onGroupCreatedPage = 3L to 6L
-)
+val createGroupPauseConfig =
+    CreateGroupPauseConfig(
+        beforeStart = 0L to 2L,
+        onCreateGroupPage = 2L to 5L,
+        afterCreateGroupPage = 2L to 5L,
+        onCreateGroupCodePage = 2L to 5L,
+        afterCreateGroupCodePage = 2L to 5L,
+        onGroupStartDatePage = 2L to 5L,
+        afterGroupStartDatePage = 2L to 5L,
+        onGroupDaysAndTimesPage = 3L to 6L,
+        afterGroupDaysAndTimesPage = 3L to 6L,
+        onGroupCohortPage = 3L to 6L,
+        afterGroupCohortPage = 3L to 6L,
+        onGroupGenderPage = 3L to 6L,
+        afterGroupGenderPage = 3L to 6L,
+        onProbationDeliveryUnitPage = 3L to 6L,
+        afterProbationDeliveryUnitPage = 3L to 6L,
+        onDeliveryLocationPage = 3L to 6L,
+        afterDeliveryLocationPage = 3L to 6L,
+        onGroupFacilitatorsPage = 3L to 6L,
+        afterGroupFacilitatorsPage = 3L to 6L,
+        onGroupReviewDetailsPage = 3L to 6L,
+        afterGroupReviewDetailsPage = 3L to 6L,
+        onGroupCreatedPage = 3L to 6L,
+    )
 
 const val CREATE_GROUP_DATE: String = "17/7/2027"
 const val DAYS_OF_WEEK_MONDAY: String = "MONDAY"
