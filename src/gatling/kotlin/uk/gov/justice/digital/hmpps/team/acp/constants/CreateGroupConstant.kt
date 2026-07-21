@@ -28,7 +28,6 @@ val createGroupPauseConfig =
         onGroupFacilitatorsPage = 3L to 6L,
         afterGroupFacilitatorsPage = 3L to 6L,
         onGroupReviewDetailsPage = 3L to 6L,
-        afterGroupReviewDetailsPage = 3L to 6L,
         onGroupCreatedPage = 3L to 6L,
     )
 

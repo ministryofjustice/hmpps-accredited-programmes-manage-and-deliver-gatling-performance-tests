@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.team.acp.service
 
+import io.gatling.javaapi.core.CheckBuilder
 import io.gatling.javaapi.core.CoreDsl
 import io.gatling.javaapi.http.HttpDsl
 import uk.gov.justice.digital.hmpps.team.acp.constants.CREATE_GROUP_DATE
@@ -18,6 +19,12 @@ import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupSimulationSession
 class CreateGroupPageOrchestrationService(
     private val acpSelectorHelper: AcpSelectorHelper = AcpSelectorHelper(),
 ) {
+    private fun redirectedTo(path: String): CheckBuilder =
+        HttpDsl
+            .currentLocationRegex("${Regex.escape(path)}(\\?.*)?$")
+            .find()
+            .exists()
+
     fun getCreateGroupPageAndDoChecks() =
         HttpDsl
             .http("GET - Create group Page")
@@ -35,6 +42,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/create-group-code"),
             )
 
     fun getCreateGroupCodePageAndDoChecks() =
@@ -55,6 +63,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("create-group-code", "#{groupCode}")
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/group-start-date"),
             )
 
     fun getGroupStartDatePageAndDoChecks() =
@@ -75,6 +84,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("create-group-date", CREATE_GROUP_DATE)
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/group-days-and-times"),
             )
 
     fun getGroupDaysAndTimesPageAndDoChecks() =
@@ -97,6 +107,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("monday-ampm", MONDAY_AMPM_PM)
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/group-cohort"),
             )
 
     fun getGroupCohortPageAndDoChecks() =
@@ -117,6 +128,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("create-group-cohort", GROUP_COHORT)
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/group-gender"),
             )
 
     fun getGroupGenderPageAndDoChecks() =
@@ -137,6 +149,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("create-group-sex", GROUP_SEX)
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/group-probation-delivery-unit"),
             )
 
     fun getProbationDeliveryUnitPageAndDoChecks() =
@@ -157,6 +170,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("create-group-pdu", GROUP_PDU)
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/group-delivery-location"),
             )
 
     fun getDeliveryLocationPageAndDoChecks() =
@@ -177,6 +191,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("create-group-location", GROUP_LOCATION)
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/group-facilitators"),
             )
 
     fun getGroupFacilitatorsPageAndDoChecks() =
@@ -198,6 +213,7 @@ class CreateGroupPageOrchestrationService(
             .formParam("create-group-facilitator", GROUP_FACILITATOR)
             .check(
                 HttpDsl.status().`is` { 200 },
+                redirectedTo("/group-review-details"),
             )
 
     fun getGroupReviewDetailsPageAndDoChecks() =
@@ -210,6 +226,9 @@ class CreateGroupPageOrchestrationService(
                 acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
+    // Submitting the review page creates the group and redirects to
+    // /group/{id}/schedule-overview — the redirect is where the new group's id comes from,
+    // and the landing page carries the "Group <code> created" banner.
     fun postGroupReviewDetailsPageAndDoChecks() =
         HttpDsl
             .http("POST - Review your group details Page")
@@ -217,17 +236,10 @@ class CreateGroupPageOrchestrationService(
             .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .check(
                 HttpDsl.status().`is` { 200 },
-            )
-
-    fun getGroupCreatedPageAndDoChecks() =
-        HttpDsl
-            .http("GET - group created Page")
-            .get { session ->
-                val groupId = session.getString(CreateGroupSimulationSession.GROUP_ID.sessionKey)
-                val groupCode = session.getString(CreateGroupSimulationSession.GROUP_CODE.sessionKey)
-                "/group/$groupId/schedule-overview?message=Group $groupCode created"
-            }.check(
-                HttpDsl.status().`is` { 200 },
+                HttpDsl
+                    .currentLocationRegex("/group/([^/]+)/schedule-overview")
+                    .find()
+                    .saveAs(CreateGroupSimulationSession.GROUP_ID.sessionKey),
                 CoreDsl
                     .css("div.moj-alert__content")
                     .find()
@@ -235,6 +247,5 @@ class CreateGroupPageOrchestrationService(
                         val groupCode = session.getString(CreateGroupSimulationSession.GROUP_CODE.sessionKey)
                         "Group $groupCode created"
                     },
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 }

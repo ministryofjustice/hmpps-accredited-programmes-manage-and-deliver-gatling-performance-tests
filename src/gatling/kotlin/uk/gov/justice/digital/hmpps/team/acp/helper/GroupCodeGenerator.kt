@@ -6,5 +6,5 @@ object GroupCodeGenerator {
     private val runId = System.currentTimeMillis().toString(36)
     private val counter = AtomicLong(0)
 
-    fun next(): String = "perf-$runId-${counter.incrementAndGet()}"
+    fun next(): String = "perf-test-$runId-${counter.incrementAndGet()}"
 }

@@ -6,7 +6,6 @@ import io.gatling.javaapi.http.HttpDsl
 import uk.gov.justice.digital.hmpps.helper.HttpRequestHelper
 import uk.gov.justice.digital.hmpps.service.SignInService
 import uk.gov.justice.digital.hmpps.team.acp.helper.GroupCodeGenerator
-import uk.gov.justice.digital.hmpps.team.acp.jdbc.CreateGroupRepository
 import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupPauseConfig
 import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupSimulationSession
 import java.time.Duration
@@ -14,7 +13,6 @@ import java.time.Duration
 class CreateGroupScenarioService(
     private val httpRequestHelper: HttpRequestHelper = HttpRequestHelper(),
     private val signInService: SignInService = SignInService(),
-    private val createGroupRepository: CreateGroupRepository = CreateGroupRepository(),
     private val pageOrchestrationService: CreateGroupPageOrchestrationService = CreateGroupPageOrchestrationService(),
 ) {
     fun buildScenario(
@@ -72,18 +70,6 @@ class CreateGroupScenarioService(
                 .exec(pageOrchestrationService.getGroupReviewDetailsPageAndDoChecks())
                 .pause(pauses.onGroupReviewDetailsPage.first, pauses.onGroupReviewDetailsPage.second)
                 .exec(pageOrchestrationService.postGroupReviewDetailsPageAndDoChecks())
-                .pause(pauses.afterGroupReviewDetailsPage.first, pauses.afterGroupReviewDetailsPage.second)
-                .exec { session ->
-                    val groupCode =
-                        requireNotNull(session.getString(CreateGroupSimulationSession.GROUP_CODE.sessionKey)) {
-                            "GROUP_CODE is missing from Gatling session"
-                        }
-                    val groupId =
-                        requireNotNull(createGroupRepository.findGroupIdByCode(groupCode)) {
-                            "Group ID not found for group code: $groupCode"
-                        }
-                    session.set(CreateGroupSimulationSession.GROUP_ID.sessionKey, groupId.toString())
-                }.exec(pageOrchestrationService.getGroupCreatedPageAndDoChecks())
                 .pause(pauses.onGroupCreatedPage.first, pauses.onGroupCreatedPage.second)
 
         return CoreDsl
