@@ -27,5 +27,7 @@ auth_password=
 #hmpps-accredited-programmes-manage-and-deliver-ui.session=
 
 # Optional load overrides (defaults shown)
-#concurrent_users=2
-#test_duration_minutes=5
+#case_list_concurrent_users=2
+#case_list_test_duration_minutes=5
+#create_group_concurrent_users=1
+#create_group_test_duration_minutes=5

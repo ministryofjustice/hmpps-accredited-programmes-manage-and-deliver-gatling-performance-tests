@@ -103,8 +103,7 @@ class CaseListPageOrchestrationService(
             .post { session ->
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/update-learning-disabilities-and-challenges"
-            }.header("content-type", "application/x-www-form-urlencoded")
-            .formParam("_csrf", "#{${CaseListSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${CaseListSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("hasLdc", LDC_FLAG_MAY_NEED_AN_LDC_ADAPTED_PROGRAMME)
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -139,8 +138,7 @@ class CaseListPageOrchestrationService(
             .post { session ->
                 val referralId = session.getString(CaseListSimulationSession.REFERRAL_ID.sessionKey)
                 "/referral/$referralId/change-cohort"
-            }.header("content-type", "application/x-www-form-urlencoded")
-            .formParam("_csrf", "#{${CaseListSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${CaseListSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("updatedCohort", CHANGE_COHORT_GENERAL_OFFENCE)
             .check(
                 HttpDsl.status().`is` { 200 },

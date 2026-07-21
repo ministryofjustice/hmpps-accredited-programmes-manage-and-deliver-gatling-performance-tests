@@ -46,7 +46,6 @@ class SignInService(
                 HttpDsl
                     .http("POST - Sign in credentials")
                     .post("${authConfig.authBaseUrl}/auth/sign-in")
-                    .header("content-type", "application/x-www-form-urlencoded")
                     .formParam("_csrf", "#{$SIGN_IN_CSRF_KEY}")
                     .formParam("redirect_uri", "#{$SIGN_IN_REDIRECT_URI_KEY}")
                     .formParam("username", username)

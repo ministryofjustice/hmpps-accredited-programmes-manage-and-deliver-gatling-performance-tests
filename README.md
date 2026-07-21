@@ -69,7 +69,7 @@ With `local.properties` in place no other arguments are needed. Individual value
 overridden per-run, e.g.:
 
 ```
-./gradlew gatlingRun --simulation uk.gov.justice.digital.hmpps.team.acp.simulations.CaseListSimulation -Dconcurrent_users=5 -Dtest_duration_minutes=10
+./gradlew gatlingRun --simulation uk.gov.justice.digital.hmpps.team.acp.simulations.CaseListSimulation -Dcase_list_concurrent_users=5 -Dcase_list_test_duration_minutes=10
 ```
 
 ## Available settings
@@ -86,8 +86,10 @@ overridden per-run, e.g.:
 | `auth_password`                                             | yes                  | HMPPS Auth test account password                                                              |
 | `authBaseUrl`                                               | no (defaults to dev) | HMPPS Auth base URL, e.g. `https://sign-in-dev.hmpps.service.justice.gov.uk`                  |
 | `hmpps-accredited-programmes-manage-and-deliver-ui.session` | no                   | Debug override: skip sign-in and share this browser session cookie across all virtual users   |
-| `concurrent_users`                                          | no (default 2)       | Number of concurrent virtual users                                                            |
-| `test_duration_minutes`                                     | no (default 5)       | Test duration in minutes                                                                      |
+| `case_list_concurrent_users`                                | no (default 2)       | Number of concurrent virtual users for the case list simulation                              |
+| `case_list_test_duration_minutes`                           | no (default 5)       | Case list test duration in minutes                                                            |
+| `create_group_concurrent_users`                             | no (default 1)       | Number of concurrent virtual users for the create group simulation                           |
+| `create_group_test_duration_minutes`                        | no (default 5)       | Create group test duration in minutes                                                         |
 
 # Troubleshooting
 
