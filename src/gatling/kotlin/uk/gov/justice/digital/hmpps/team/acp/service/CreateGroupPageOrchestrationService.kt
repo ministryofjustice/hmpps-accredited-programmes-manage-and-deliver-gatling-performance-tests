@@ -59,8 +59,8 @@ class CreateGroupPageOrchestrationService(
         HttpDsl
             .http("POST - Create a group code Page")
             .post { "/create-group-code" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-code", "#{groupCode}")
+.formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("create-group-code", "#{${CreateGroupSimulationSession.GROUP_CODE.sessionKey}}")
             .check(
                 HttpDsl.status().`is` { 200 },
                 redirectedTo("/group-start-date"),
