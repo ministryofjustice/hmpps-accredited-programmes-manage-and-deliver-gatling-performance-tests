@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.team.acp.service
 import io.gatling.javaapi.core.CheckBuilder
 import io.gatling.javaapi.core.CoreDsl
 import io.gatling.javaapi.http.HttpDsl
-import uk.gov.justice.digital.hmpps.team.acp.constants.CREATE_GROUP_DATE
 import uk.gov.justice.digital.hmpps.team.acp.constants.DAYS_OF_WEEK_MONDAY
 import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_COHORT
 import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_FACILITATOR
@@ -13,6 +12,7 @@ import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_SEX
 import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_TREATMENT_MANAGER
 import uk.gov.justice.digital.hmpps.team.acp.constants.MONDAY_AMPM_PM
 import uk.gov.justice.digital.hmpps.team.acp.constants.MONDAY_HOUR_ONE
+import uk.gov.justice.digital.hmpps.team.acp.constants.generateCreateGroupDate
 import uk.gov.justice.digital.hmpps.team.acp.helper.AcpSelectorHelper
 import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupSimulationSession
 
@@ -81,7 +81,7 @@ class CreateGroupPageOrchestrationService(
             .http("POST - Add a start date for the group Page")
             .post { "/group-start-date" }
             .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-date", CREATE_GROUP_DATE)
+            .formParam("create-group-date", generateCreateGroupDate())
             .check(
                 HttpDsl.status().`is` { 200 },
                 redirectedTo("/group-days-and-times"),

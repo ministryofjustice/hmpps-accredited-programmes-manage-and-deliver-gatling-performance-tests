@@ -2,9 +2,12 @@ package uk.gov.justice.digital.hmpps.team.acp.constants
 
 import uk.gov.justice.digital.hmpps.config.ConfigResolver
 import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupPauseConfig
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 val NO_OF_CREATE_GROUP_USERS: Int = ConfigResolver.get("create_group_concurrent_users")?.toIntOrNull() ?: 1
-val CREATE_GROUP_TEST_DURATION_MINUTES: Long = ConfigResolver.get("create_group_test_duration_minutes")?.toLongOrNull() ?: 5L
+val CREATE_GROUP_TEST_DURATION_MINUTES: Long =
+    ConfigResolver.get("create_group_test_duration_minutes")?.toLongOrNull() ?: 5L
 
 val createGroupPauseConfig =
     CreateGroupPauseConfig(
@@ -31,7 +34,8 @@ val createGroupPauseConfig =
         onGroupCreatedPage = 3L to 6L,
     )
 
-const val CREATE_GROUP_DATE: String = "17/7/2027"
+fun generateCreateGroupDate(): String = LocalDate.now().plusYears(1).format(DateTimeFormatter.ofPattern("d/M/yyyy"))
+
 const val DAYS_OF_WEEK_MONDAY: String = "MONDAY"
 const val MONDAY_HOUR_ONE: String = "1"
 const val MONDAY_AMPM_PM: String = "PM"
