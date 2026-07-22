@@ -90,6 +90,8 @@ overridden per-run, e.g.:
 | `case_list_test_duration_minutes`                           | no (default 5)       | Case list test duration in minutes                                                            |
 | `create_group_concurrent_users`                             | no (default 1)       | Number of concurrent virtual users for the create group simulation                           |
 | `create_group_test_duration_minutes`                        | no (default 5)       | Create group test duration in minutes                                                         |
+| `schedule_overview_concurrent_users`                        | no (default 5)       | Number of concurrent virtual users for the schedule overview read simulation                  |
+| `schedule_overview_test_duration_minutes`                   | no (default 5)       | Schedule overview test duration in minutes                                                    |
 
 # Troubleshooting
 
