@@ -1,0 +1,159 @@
+services:
+  hmpps-auth:
+    image: ghcr.io/ministryofjustice/hmpps-auth:latest
+    networks:
+      - hmpps
+    container_name: gatling-hmpps-auth
+    ports:
+      - '8090:8090'
+    healthcheck:
+      test: [ 'CMD-SHELL', 'bash -c "echo -e \"GET /health/ping HTTP/1.1\r\nHost: localhost\r\n\r\n\" > /dev/tcp/localhost/8090"' ]
+    environment:
+      - SERVER_PORT=8090
+      - SPRING_PROFILES_ACTIVE=dev
+      - DELIUS_ENABLED=true
+      - DELIUS_ENDPOINT_URL=http://wiremock:8080/delius
+      - DELIUS_ENDPOINT_TIMEOUT=1s
+      - DELIUS_CLIENT_CLIENT-ID=delius-auth-api-client
+      - DELIUS_CLIENT_CLIENT-SECRET=delius-auth-api-client
+      - JAVA_TOOL_OPTIONS=-Dspring.codec.max-in-memory-size=10MB
+
+  postgresql:
+    image: postgres
+    container_name: gatling-postgres
+    networks:
+      - hmpps
+    restart: always
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: [ "CMD", "pg_isready", "--username=admin", "--dbname=postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin_password
+
+  localstack:
+    image: localstack/localstack:4
+    networks:
+      - hmpps
+    container_name: gatling-localstack
+    ports:
+      - "4566:4566"
+      - "8999:8080"
+    environment:
+      - SERVICES=sns,sqs
+      - DEBUG=${DEBUG- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  wiremock:
+    image: wiremock/wiremock:3.13.2
+    networks:
+      - hmpps
+    container_name: gatling-wiremock
+    restart: always
+    ports:
+      - "9095:8080"
+    volumes:
+      - ./wiremock_mappings:/home/wiremock/mappings
+    command: >
+      --verbose
+      --jetty-header-buffer-size 32768
+      --max-request-journal-entries 1000
+
+  hmpps-accredited-programmes-manage-and-deliver-api:
+    image: ghcr.io/ministryofjustice/hmpps-accredited-programmes-manage-and-deliver-api:latest
+    container_name: gatling-manage-and-deliver-api
+    user: "${UID:-1000}:${GID:-1000}"
+    networks:
+      - hmpps
+    ports:
+      - '8080:8080'
+      - '5005:5005'
+    healthcheck:
+      test: [ 'CMD-SHELL', 'bash -c "echo -e \"GET /health/ping HTTP/1.1\r\nHost: localhost\r\n\r\n\" > /dev/tcp/localhost/8080"' ]
+    environment:
+      - SERVER_PORT=8080
+      - HMPPS_AUTH_URL=http://hmpps-auth:8090/auth
+      # 'seeding' enables the /dev/seed/* endpoints used by ./scripts/seed-data.sh
+      - SPRING_PROFILES_ACTIVE=dev,local,seeding
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin_password
+      - HMPPS_SQS_PROVIDER=localstack
+      - HMPPS_SQS_LOCALSTACKURL=http://localstack:4566
+      - SERVICES_NDELIUS_INTEGRATION_API_BASE_URL=http://wiremock:8080
+      - SERVICES_OASYS_API_BASE_URL=http://wiremock:8080
+      - SERVICES_ASSESS_RISKS_AND_NEEDS_API_BASE_URL=http://wiremock:8080
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - SPRING_CODEC_MAX_IN_MEMORY_SIZE=10MB
+    volumes:
+      - ./wiremock_mappings/seeded:/app/wiremock_mappings/seeded
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      localstack:
+        condition: service_started
+
+  hmpps-accredited-programmes-manage-and-deliver-ui:
+    image: ghcr.io/ministryofjustice/hmpps-accredited-programmes-manage-and-deliver-ui:latest
+    container_name: gatling-manage-and-deliver-ui
+    networks:
+      - hmpps
+    ports:
+      - '3000:3000'
+    environment:
+      # Server-to-server auth call stays on the docker network...
+      - HMPPS_AUTH_URL=http://hmpps-auth:8090/auth
+      # ...but the browser/Gatling redirect must resolve from the HOST, so use localhost here.
+      - HMPPS_AUTH_EXTERNAL_URL=http://localhost:8090/auth
+      - PORT=3000
+      - TOKEN_VERIFICATION_ENABLED=false
+
+      # Redis (disabled but vars present for completeness)
+      - REDIS_ENABLED=false
+      - REDIS_HOST=localhost
+      - REDIS_PORT=6379
+      - REDIS_AUTH_TOKEN=
+      - REDIS_TLS_ENABLED=false
+
+      # Build / release info (safe dev defaults)
+      - BUILD_NUMBER=1_0_0
+      - PRODUCT_ID=UNASSIGNED
+      - GIT_REF=xxxxxxxxxxxxxxxxxxx
+      - GIT_BRANCH=xxxxxxxxxxxxxxxxxxx
+
+      # Session
+      - SESSION_SECRET=app-insecure-default-session
+      - WEB_SESSION_TIMEOUT_IN_MINUTES=120
+
+      # Auth client credentials
+      - AUTH_CODE_CLIENT_ID=hmpps-accredited-programmes-manage-and-deliver-ui
+      - AUTH_CODE_CLIENT_SECRET=clientsecret
+      - CLIENT_CREDS_CLIENT_ID=hmpps-accredited-programmes-manage-and-deliver-ui-client-1
+      - CLIENT_CREDS_CLIENT_SECRET=clientsecret
+
+      # Backend API
+      - ACCREDITED_PROGRAMMES_MANAGE_AND_DELIVER_URL=http://hmpps-accredited-programmes-manage-and-deliver-api:8080
+
+      # Token verification (disabled but URL still initialised)
+      - TOKEN_VERIFICATION_API_URL=http://localhost:8100
+
+      # Misc
+      - INGRESS_URL=http://localhost:3000
+      - ENVIRONMENT_NAME=local
+      - NO_HTTPS=true
+      - ENABLE_PAST_DATE_REGION_RESTRICTION=false
+    depends_on:
+      hmpps-accredited-programmes-manage-and-deliver-api:
+        condition: service_healthy
+      hmpps-auth:
+        condition: service_healthy
+
+networks:
+  hmpps:
