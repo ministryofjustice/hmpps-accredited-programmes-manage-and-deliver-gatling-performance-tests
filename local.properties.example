@@ -31,3 +31,5 @@ auth_password=
 #case_list_test_duration_minutes=5
 #create_group_concurrent_users=1
 #create_group_test_duration_minutes=5
+#group_details_concurrent_users=1
+#group_details_test_duration_minutes=5

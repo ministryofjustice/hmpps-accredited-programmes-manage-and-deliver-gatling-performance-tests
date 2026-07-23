@@ -74,22 +74,24 @@ overridden per-run, e.g.:
 
 ## Available settings
 
-| Key                                                         | Required             | Description                                                                                   |
-|-------------------------------------------------------------|----------------------|-----------------------------------------------------------------------------------------------|
-| `protocol`                                                  | yes                  | `https` (or `http` for local)                                                                 |
-| `domain`                                                    | yes                  | Target host, e.g. `accredited-programmes-manage-and-deliver-dev.hmpps.service.justice.gov.uk` |
-| `db_port`                                                   | yes                  | Local port from the port-forward step                                                         |
-| `db_name`                                                   | yes                  | From the port-forward step                                                                    |
-| `db_username`                                               | yes                  | From the port-forward step                                                                    |
-| `db_password`                                               | yes                  | From the port-forward step                                                                    |
-| `auth_username`                                             | yes                  | HMPPS Auth test account username, used by each virtual user to sign in                        |
-| `auth_password`                                             | yes                  | HMPPS Auth test account password                                                              |
-| `authBaseUrl`                                               | no (defaults to dev) | HMPPS Auth base URL, e.g. `https://sign-in-dev.hmpps.service.justice.gov.uk`                  |
+| Key                                                 | Required             | Description                                                                                   |
+|-----------------------------------------------------|----------------------|-----------------------------------------------------------------------------------------------|
+| `protocol`                                          | yes                  | `https` (or `http` for local)                                                                 |
+| `domain`                                            | yes                  | Target host, e.g. `accredited-programmes-manage-and-deliver-dev.hmpps.service.justice.gov.uk` |
+| `db_port`                                           | yes                  | Local port from the port-forward step                                                         |
+| `db_name`                                           | yes                  | From the port-forward step                                                                    |
+| `db_username`                                       | yes                  | From the port-forward step                                                                    |
+| `db_password`                                       | yes                  | From the port-forward step                                                                    |
+| `auth_username`                                     | yes                  | HMPPS Auth test account username, used by each virtual user to sign in                        |
+| `auth_password`                                     | yes                  | HMPPS Auth test account password                                                              |
+| `authBaseUrl`                                       | no (defaults to dev) | HMPPS Auth base URL, e.g. `https://sign-in-dev.hmpps.service.justice.gov.uk`                  |
 | `hmpps-accredited-programmes-manage-and-deliver-ui.session` | no                   | Debug override: skip sign-in and share this browser session cookie across all virtual users   |
-| `case_list_concurrent_users`                                | no (default 2)       | Number of concurrent virtual users for the case list simulation                              |
-| `case_list_test_duration_minutes`                           | no (default 5)       | Case list test duration in minutes                                                            |
-| `create_group_concurrent_users`                             | no (default 1)       | Number of concurrent virtual users for the create group simulation                           |
-| `create_group_test_duration_minutes`                        | no (default 5)       | Create group test duration in minutes                                                         |
+| `case_list_concurrent_users`                        | no (default 2)       | Number of concurrent virtual users for the case list simulation                               |
+| `case_list_test_duration_minutes`                   | no (default 5)       | Case list test duration in minutes                                                            |
+| `create_group_concurrent_users`                     | no (default 1)       | Number of concurrent virtual users for the create group simulation                            |
+| `create_group_test_duration_minutes`                | no (default 5)       | Create group test duration in minutes                                                         |
+| `group_details_concurrent_users`                    | no (default 1)       | Number of concurrent virtual users for the group details simulation                           |
+| `group_details_test_duration_minutes`               | no (default 5)       | Group details test duration in minutes                                                        |
 
 # Troubleshooting
 
