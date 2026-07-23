@@ -14,6 +14,7 @@ import uk.gov.justice.digital.hmpps.team.acp.constants.MONDAY_AMPM_PM
 import uk.gov.justice.digital.hmpps.team.acp.constants.MONDAY_HOUR_ONE
 import uk.gov.justice.digital.hmpps.team.acp.constants.generateCreateGroupDate
 import uk.gov.justice.digital.hmpps.team.acp.helper.AcpSelectorHelper
+import uk.gov.justice.digital.hmpps.team.acp.helper.ScheduleOverviewSelectors
 import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupSimulationSession
 
 class CreateGroupPageOrchestrationService(
@@ -240,6 +241,7 @@ class CreateGroupPageOrchestrationService(
                     .currentLocationRegex("/group/([^/]+)/schedule-overview")
                     .find()
                     .saveAs(CreateGroupSimulationSession.GROUP_ID.sessionKey),
+                ScheduleOverviewSelectors.headingCheck(),
                 CoreDsl
                     .css("div.moj-alert__content")
                     .find()
