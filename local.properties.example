@@ -33,3 +33,18 @@ auth_password=
 #create_group_test_duration_minutes=5
 #schedule_overview_concurrent_users=5
 #schedule_overview_test_duration_minutes=5
+
+# --- Running against the LOCAL docker-compose stack (see Makefile / README) ---
+# To point the tests at the local stack instead of the dev environment, use these values instead of
+# the ones at the top of this file:
+#protocol=http
+#domain=localhost:3000
+#authBaseUrl=http://localhost:8090
+#db_port=5432
+#db_name=postgres
+#db_username=admin
+#db_password=admin_password
+# A dev user that exists in the local hmpps-auth AND has the region/roles matching your seeded data
+# and the region in GroupAllocationFeeder (currently 'Greater Manchester'):
+#auth_username=
+#auth_password=

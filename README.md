@@ -93,6 +93,35 @@ overridden per-run, e.g.:
 | `schedule_overview_concurrent_users`                        | no (default 5)       | Number of concurrent virtual users for the schedule overview read simulation                  |
 | `schedule_overview_test_duration_minutes`                   | no (default 5)       | Schedule overview test duration in minutes                                                    |
 
+# Running against a local environment
+
+For journeys that **mutate** data (e.g. group allocation) you can run against a local stack instead
+of a shared environment, so you don't change real data while writing the journey.
+
+`docker-compose.yml` brings up hmpps-auth, postgres, localstack, the api and the ui (plus wiremock —
+see the note in the compose file; auth/api depend on it and the seed script writes stubs into a
+shared volume it serves). Images are pulled from ghcr, so nothing is built locally.
+
+```
+make local-up          # start the stack and wait for healthchecks
+make seed              # generate referrals via the api's ./scripts/seed-data.sh (SEED_COUNT=50)
+make ps / make logs    # inspect
+make down              # stop (keep data)
+make clean             # stop and drop volumes (postgres data + seeded stubs)
+```
+
+`make seed` shells into the locally-cloned api repo — override its location with
+`make seed API_DIR=/path/to/hmpps-accredited-programmes-manage-and-deliver-api`. There is **no group
+seeding yet**: `make seed-groups` is a stub — you'll need to create `programme_group` rows in the
+same region as the seeded referrals/user before the allocation journey has a group to allocate onto.
+
+Then copy the local values from `local.properties.example` (the "Running against the LOCAL
+docker-compose stack" block) into `local.properties`, and run a simulation — e.g.
+`make run-group-allocation`, or the usual `./gradlew gatlingRun --simulation ...`.
+
+Entry points once up: UI `http://localhost:3000`, API `http://localhost:8080`, Auth
+`http://localhost:8090/auth`.
+
 # Troubleshooting
 
 If a run fails and the report alone doesn't explain why, set the `GATLING_HTTP_LOG` environment
