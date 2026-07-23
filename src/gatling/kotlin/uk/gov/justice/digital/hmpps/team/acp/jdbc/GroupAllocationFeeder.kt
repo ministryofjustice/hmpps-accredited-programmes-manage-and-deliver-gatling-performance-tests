@@ -12,7 +12,7 @@ class GroupAllocationFeeder(
         val feederQuery = """
             SELECT DISTINCT ON (gwiv.referral_id)
                    pg.id         AS ${GroupAllocationSimulationSession.GROUP_ID.sessionKey},
-                   gwiv.referral_id AS ${GroupAllocationSimulationSession.REFERRAL_ID.sessionKey},
+                   gwiv.referral_id AS ${GroupAllocationSimulationSession.REFERRAL_ID.sessionKey}
             FROM group_waitlist_item_view gwiv
             JOIN programme_group pg
               ON pg.region_name = gwiv.region_name

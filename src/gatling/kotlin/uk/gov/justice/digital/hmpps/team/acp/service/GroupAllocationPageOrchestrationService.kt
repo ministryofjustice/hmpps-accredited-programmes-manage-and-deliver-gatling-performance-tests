@@ -16,7 +16,7 @@ class GroupAllocationPageOrchestrationService(
     private val csrf = GroupAllocationSimulationSession.CSRF_TOKEN_VALUE.sessionKey
 
     private val addToGroupHeadingPattern = Regex("^Add .+ to this group\\?$")
-    private val scheduleStatusDetailsHeadingPattern = Regex(".+ referral status will change to Scheduled\\?$")
+    private val scheduleStatusDetailsHeadingPattern = Regex("^.+'s referral status will change to Scheduled$")
 
     private val allocationsAndWaitlistHeading = "Allocations and waitlist"
 
