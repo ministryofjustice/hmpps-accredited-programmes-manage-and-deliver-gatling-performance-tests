@@ -33,3 +33,5 @@ auth_password=
 #create_group_test_duration_minutes=5
 #schedule_overview_concurrent_users=5
 #schedule_overview_test_duration_minutes=5
+#group_allocation_concurrent_users=1
+#group_allocation_test_duration_minutes=5
