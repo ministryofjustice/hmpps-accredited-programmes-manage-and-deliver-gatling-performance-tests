@@ -34,8 +34,7 @@ class GroupDetailsPageOrchestrationService(
                 System.out.println("session: $session")
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/group/$groupId/group-details"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Group details"),
             )
@@ -46,8 +45,7 @@ class GroupDetailsPageOrchestrationService(
             .get { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-code"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Edit group code"),
                 acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
@@ -59,8 +57,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-code"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("create-group-code", "#{${GroupDetailsSimulationSession.GROUP_CODE.sessionKey}}")
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -73,8 +70,7 @@ class GroupDetailsPageOrchestrationService(
             .get { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-start-date"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Edit start date for the group"),
                 acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
@@ -86,8 +82,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-start-date"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("create-group-date", generateCreateGroupDate())
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -100,8 +95,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-start-date-rescheduled"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("reschedule-other-sessions", RESCHEDULE_OTHER_SESSIONS)
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -114,8 +108,7 @@ class GroupDetailsPageOrchestrationService(
             .get { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-days-and-times"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Edit when will the group run"),
                 acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
@@ -127,8 +120,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-days-and-times"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("days-of-week", DAYS_OF_WEEK_TUESDAY)
             .formParam("tuesday-hour", TUESDAY_HOUR_ONE)
             .formParam("tuesday-ampm", TUESDAY_AMPM_PM)
@@ -143,8 +135,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-days-and-times/reschedule"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("reschedule-other-sessions", RESCHEDULE_OTHER_SESSIONS)
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -157,8 +148,7 @@ class GroupDetailsPageOrchestrationService(
             .get { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-cohort"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Edit the group cohort"),
                 acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
@@ -170,8 +160,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-cohort"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("create-group-cohort", EDIT_GROUP_COHORT)
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -184,8 +173,7 @@ class GroupDetailsPageOrchestrationService(
             .get { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-gender"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Edit the gender of the group"),
                 acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
@@ -197,8 +185,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-gender"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("create-group-sex", EDIT_GROUP_SEX)
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -211,8 +198,7 @@ class GroupDetailsPageOrchestrationService(
             .get { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-probation-delivery-unit"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Edit the probation delivery unit (PDU) where the group will take place"),
                 acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
@@ -224,8 +210,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-probation-delivery-unit"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("create-group-pdu", EDIT_GROUP_PDU)
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -238,8 +223,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-delivery-location"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("create-group-location", EDIT_GROUP_LOCATION)
             .check(
                 HttpDsl.status().`is` { 200 },
@@ -252,8 +236,7 @@ class GroupDetailsPageOrchestrationService(
             .get { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-delivery-location"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Edit where the group will take place"),
                 acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
@@ -265,8 +248,7 @@ class GroupDetailsPageOrchestrationService(
             .get { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-facilitators"
-            }
-            .check(
+            }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Edit who is responsible for the group"),
                 acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
@@ -278,8 +260,7 @@ class GroupDetailsPageOrchestrationService(
             .post { session ->
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/$groupId/edit-group-facilitators"
-            }
-            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            }.formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("create-group-treatment-manager", EDIT_GROUP_TREATMENT_MANAGER)
             .formParam("create-group-facilitator", EDIT_GROUP_FACILITATOR)
             .check(

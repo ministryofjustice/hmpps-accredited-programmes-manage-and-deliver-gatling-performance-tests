@@ -41,7 +41,7 @@ class GroupDetailsScenarioService(
                     session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
                 }.exec(pageOrchestrationService.postEditGroupCodePageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
-                //Edit group start date
+                // Edit group start date
                 .exec(pageOrchestrationService.getEditGroupStartDatePageAndDoChecks())
                 .pause(pauses.onEditGroupStartDatePage.first, pauses.onEditGroupStartDatePage.second)
                 .exec { session ->
