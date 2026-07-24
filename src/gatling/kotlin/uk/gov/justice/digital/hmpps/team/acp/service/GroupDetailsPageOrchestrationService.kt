@@ -3,19 +3,18 @@ package uk.gov.justice.digital.hmpps.team.acp.service
 import io.gatling.javaapi.core.CheckBuilder
 import io.gatling.javaapi.core.CoreDsl
 import io.gatling.javaapi.http.HttpDsl
-import uk.gov.justice.digital.hmpps.team.acp.constants.DAYS_OF_WEEK_MONDAY
-import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_COHORT
-import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_FACILITATOR
-import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_LOCATION
-import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_PDU
-import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_SEX
-import uk.gov.justice.digital.hmpps.team.acp.constants.GROUP_TREATMENT_MANAGER
-import uk.gov.justice.digital.hmpps.team.acp.constants.MONDAY_AMPM_PM
-import uk.gov.justice.digital.hmpps.team.acp.constants.MONDAY_HOUR_ONE
+import uk.gov.justice.digital.hmpps.team.acp.constants.DAYS_OF_WEEK_TUESDAY
+import uk.gov.justice.digital.hmpps.team.acp.constants.EDIT_GROUP_COHORT
+import uk.gov.justice.digital.hmpps.team.acp.constants.EDIT_GROUP_FACILITATOR
+import uk.gov.justice.digital.hmpps.team.acp.constants.EDIT_GROUP_LOCATION
+import uk.gov.justice.digital.hmpps.team.acp.constants.EDIT_GROUP_PDU
+import uk.gov.justice.digital.hmpps.team.acp.constants.EDIT_GROUP_SEX
+import uk.gov.justice.digital.hmpps.team.acp.constants.EDIT_GROUP_TREATMENT_MANAGER
+import uk.gov.justice.digital.hmpps.team.acp.constants.RESCHEDULE_OTHER_SESSIONS
+import uk.gov.justice.digital.hmpps.team.acp.constants.TUESDAY_AMPM_PM
+import uk.gov.justice.digital.hmpps.team.acp.constants.TUESDAY_HOUR_ONE
 import uk.gov.justice.digital.hmpps.team.acp.constants.generateCreateGroupDate
 import uk.gov.justice.digital.hmpps.team.acp.helper.AcpSelectorHelper
-import uk.gov.justice.digital.hmpps.team.acp.model.CaseListSimulationSession
-import uk.gov.justice.digital.hmpps.team.acp.model.CreateGroupSimulationSession
 import uk.gov.justice.digital.hmpps.team.acp.model.GroupDetailsSimulationSession
 
 class GroupDetailsPageOrchestrationService(
@@ -31,13 +30,14 @@ class GroupDetailsPageOrchestrationService(
         HttpDsl
             .http("GET - Group details Page")
             .get { session ->
+                System.out.println("group ID: ${session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)}")
+                System.out.println("session: $session")
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/group/$groupId/group-details"
             }
             .check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1").find().`is`("Group details"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
     fun getEditGroupCodePageAndDoChecks() =
@@ -56,215 +56,234 @@ class GroupDetailsPageOrchestrationService(
     fun postEditGroupCodePageAndDoChecks() =
         HttpDsl
             .http("POST - Edit a group code Page")
-            .post { "/edit-group-code" }
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-code"
+            }
             .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-code", "#{${CreateGroupSimulationSession.GROUP_CODE.sessionKey}}")
+            .formParam("create-group-code", "#{${GroupDetailsSimulationSession.GROUP_CODE.sessionKey}}")
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-details"),
+                redirectedTo("/group/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/group-details"),
             )
 
-    fun getCreateGroupCodePageAndDoChecks() =
+    fun getEditGroupStartDatePageAndDoChecks() =
         HttpDsl
-            .http("GET - Create a group code Page")
-            .get("/create-group-code")
+            .http("GET - Edit group start date Page")
+            .get { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-start-date"
+            }
             .check(
                 HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("Create a group code"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+                CoreDsl.css("h1").find().`is`("Edit start date for the group"),
+                acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
-    fun postCreateGroupCodePageAndDoChecks() =
+    fun postEditGroupStartDatePageAndDoChecks() =
         HttpDsl
-            .http("POST - Create a group code Page")
-            .post { "/create-group-code" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-code", "#{${CreateGroupSimulationSession.GROUP_CODE.sessionKey}}")
-            .check(
-                HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-start-date"),
-            )
-
-    fun getGroupStartDatePageAndDoChecks() =
-        HttpDsl
-            .http("GET - Add a start date for the group Page")
-            .get("/group-start-date")
-            .check(
-                HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("Add a start date for the group"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
-            )
-
-    fun postGroupStartDatePageAndDoChecks() =
-        HttpDsl
-            .http("POST - Add a start date for the group Page")
-            .post { "/group-start-date" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .http("POST - Edit a group start date Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-start-date"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
             .formParam("create-group-date", generateCreateGroupDate())
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-days-and-times"),
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/edit-start-date-rescheduled"),
             )
 
-    fun getGroupDaysAndTimesPageAndDoChecks() =
+    fun postEditGroupStartDateReschedulePageAndDoChecks() =
         HttpDsl
-            .http("GET - When will the group run? Page")
-            .get("/group-days-and-times")
+            .http("POST - Edit a group start date reschedule Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-start-date-rescheduled"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("reschedule-other-sessions", RESCHEDULE_OTHER_SESSIONS)
             .check(
                 HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("When will the group run?"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/group-details"),
             )
 
-    fun postGroupDaysAndTimesPageAndDoChecks() =
+    fun getEditGroupDaysAndTimesPageAndDoChecks() =
         HttpDsl
-            .http("POST - When will the group run? Page")
-            .post { "/group-days-and-times" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("days-of-week", DAYS_OF_WEEK_MONDAY)
-            .formParam("monday-hour", MONDAY_HOUR_ONE)
-            .formParam("monday-ampm", MONDAY_AMPM_PM)
+            .http("GET - Edit group days and times Page")
+            .get { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-days-and-times"
+            }
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-cohort"),
+                CoreDsl.css("h1").find().`is`("Edit when will the group run"),
+                acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
-    fun getGroupCohortPageAndDoChecks() =
+    fun postEditGroupDaysAndTimesPageAndDoChecks() =
         HttpDsl
-            .http("GET - Select the group cohort Page")
-            .get("/group-cohort")
+            .http("POST - Edit a group days and times Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-days-and-times"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("days-of-week", DAYS_OF_WEEK_TUESDAY)
+            .formParam("tuesday-hour", TUESDAY_HOUR_ONE)
+            .formParam("tuesday-ampm", TUESDAY_AMPM_PM)
             .check(
                 HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("Select the group cohort"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/edit-group-days-and-times/reschedule"),
             )
 
-    fun postGroupCohortPageAndDoChecks() =
+    fun postEditGroupDaysAndTimesReschedulePageAndDoChecks() =
         HttpDsl
-            .http("POST - Select the group cohort Page")
-            .post { "/group-cohort" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-cohort", GROUP_COHORT)
+            .http("POST - Edit group days and times reschedule Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-days-and-times/reschedule"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("reschedule-other-sessions", RESCHEDULE_OTHER_SESSIONS)
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-gender"),
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/group-details"),
             )
 
-    fun getGroupGenderPageAndDoChecks() =
+    fun getEditGroupCohortPageAndDoChecks() =
         HttpDsl
-            .http("GET - Select the gender of the group Page")
-            .get("/group-gender")
+            .http("GET - Edit group cohort Page")
+            .get { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-cohort"
+            }
             .check(
                 HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("Select the gender of the group"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+                CoreDsl.css("h1").find().`is`("Edit the group cohort"),
+                acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
-    fun postGroupGenderPageAndDoChecks() =
+    fun postEditGroupCohortPageAndDoChecks() =
         HttpDsl
-            .http("POST - Select the gender of the group Page")
-            .post { "/group-gender" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-sex", GROUP_SEX)
+            .http("POST - Edit a group cohort Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-cohort"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("create-group-cohort", EDIT_GROUP_COHORT)
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-probation-delivery-unit"),
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/group-details"),
             )
 
-    fun getProbationDeliveryUnitPageAndDoChecks() =
+    fun getEditGroupGenderPageAndDoChecks() =
         HttpDsl
-            .http("GET - In which probation delivery unit (PDU) will the group take place? Page")
-            .get("/group-probation-delivery-unit")
+            .http("GET - Edit group gender Page")
+            .get { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-gender"
+            }
             .check(
                 HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("In which probation delivery unit (PDU) will the group take place?"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+                CoreDsl.css("h1").find().`is`("Edit the gender of the group"),
+                acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
-    fun postProbationDeliveryUnitPageAndDoChecks() =
+    fun postEditGroupGenderPageAndDoChecks() =
         HttpDsl
-            .http("POST - In which probation delivery unit (PDU) will the group take place? Page")
-            .post { "/group-probation-delivery-unit" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-pdu", GROUP_PDU)
+            .http("POST - Edit a group gender Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-gender"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("create-group-sex", EDIT_GROUP_SEX)
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-delivery-location"),
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/group-details"),
             )
 
-    fun getDeliveryLocationPageAndDoChecks() =
+    fun getEditGroupProbationDeliveryUnitPageAndDoChecks() =
         HttpDsl
-            .http("GET - Where will the group take place?")
-            .get("/group-delivery-location")
+            .http("GET - Edit group probation delivery unit Page")
+            .get { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-probation-delivery-unit"
+            }
             .check(
                 HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("Where will the group take place?"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+                CoreDsl.css("h1").find().`is`("Edit the probation delivery unit (PDU) where the group will take place"),
+                acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
-    fun postDeliveryLocationPageAndDoChecks() =
+    fun postEditGroupProbationDeliveryUnitPageAndDoChecks() =
         HttpDsl
-            .http("POST - Where will the group take place? Page")
-            .post { "/group-delivery-location" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-location", GROUP_LOCATION)
+            .http("POST - Edit a group probation delivery unit Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-probation-delivery-unit"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("create-group-pdu", EDIT_GROUP_PDU)
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-facilitators"),
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/edit-group-delivery-location"),
             )
 
-    fun getGroupFacilitatorsPageAndDoChecks() =
+    fun postEditGroupDeliveryLocationPageAndDoChecks() =
         HttpDsl
-            .http("GET - Who is responsible for the group?")
-            .get("/group-facilitators")
+            .http("POST - Edit group delivery location Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-delivery-location"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("create-group-location", EDIT_GROUP_LOCATION)
             .check(
                 HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("Who is responsible for the group?"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/group-details"),
             )
 
-    fun postGroupFacilitatorsPageAndDoChecks() =
+    fun getEditGroupDeliveryLocationPageAndDoChecks() =
         HttpDsl
-            .http("POST - Who is responsible for the group? Page")
-            .post { "/group-facilitators" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
-            .formParam("create-group-treatment-manager", GROUP_TREATMENT_MANAGER)
-            .formParam("create-group-facilitator", GROUP_FACILITATOR)
+            .http("GET - Edit group delivery location Page")
+            .get { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-delivery-location"
+            }
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("/group-review-details"),
+                CoreDsl.css("h1").find().`is`("Edit where the group will take place"),
+                acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
-    fun getGroupReviewDetailsPageAndDoChecks() =
+    fun getEditGroupFacilitatorPageAndDoChecks() =
         HttpDsl
-            .http("GET - Review your group details Page")
-            .get("/group-review-details")
+            .http("GET - Edit group facilitator Page")
+            .get { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-facilitators"
+            }
             .check(
                 HttpDsl.status().`is` { 200 },
-                CoreDsl.css("h1").find().`is`("Review your group details"),
-                acpSelectorHelper.getCsrfHiddenFieldValue(CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+                CoreDsl.css("h1").find().`is`("Edit who is responsible for the group"),
+                acpSelectorHelper.getCsrfHiddenFieldValue(GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
-    // Submitting the review page creates the group and redirects to
-    // /group/{id}/schedule-overview — the redirect is where the new group's id comes from,
-    // and the landing page carries the "Group <code> created" banner.
-    fun postGroupReviewDetailsPageAndDoChecks() =
+    fun postEditGroupFacilitatorPageAndDoChecks() =
         HttpDsl
-            .http("POST - Review your group details Page")
-            .post { "/group-review-details" }
-            .formParam("_csrf", "#{${CreateGroupSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .http("POST - Edit group facilitator Page")
+            .post { session ->
+                val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/edit-group-facilitators"
+            }
+            .formParam("_csrf", "#{${GroupDetailsSimulationSession.CSRF_TOKEN_VALUE.sessionKey}}")
+            .formParam("create-group-treatment-manager", EDIT_GROUP_TREATMENT_MANAGER)
+            .formParam("create-group-facilitator", EDIT_GROUP_FACILITATOR)
             .check(
                 HttpDsl.status().`is` { 200 },
-                HttpDsl
-                    .currentLocationRegex("/group/([^/]+)/schedule-overview")
-                    .find()
-                    .saveAs(CreateGroupSimulationSession.GROUP_ID.sessionKey),
-                CoreDsl
-                    .css("div.moj-alert__content")
-                    .find()
-                    .`is` { session ->
-                        val groupCode = session.getString(CreateGroupSimulationSession.GROUP_CODE.sessionKey)
-                        "Group $groupCode created"
-                    },
+                redirectedTo("/#{${GroupDetailsSimulationSession.GROUP_ID.sessionKey}}/group-details"),
             )
 }

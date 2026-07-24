@@ -11,7 +11,7 @@ class GroupDetailsFeeder(
     fun getJdbcFeederForGroup(): FeederBuilder<Any> {
         val feederQuery = """select pm.id as ${GroupDetailsSimulationSession.GROUP_ID.sessionKey}
             from programme_group pm
-            where pm.region_name = 'NPS North East'
+            where pm.region_name = 'Greater Manchester'
             """
 
         return JdbcDsl
