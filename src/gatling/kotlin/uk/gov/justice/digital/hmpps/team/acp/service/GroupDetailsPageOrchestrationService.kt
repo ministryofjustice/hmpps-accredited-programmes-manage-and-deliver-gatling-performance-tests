@@ -30,8 +30,6 @@ class GroupDetailsPageOrchestrationService(
         HttpDsl
             .http("GET - Group details Page")
             .get { session ->
-                System.out.println("group ID: ${session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)}")
-                System.out.println("session: $session")
                 val groupId = session.getString(GroupDetailsSimulationSession.GROUP_ID.sessionKey)
                 "/group/$groupId/group-details"
             }.check(

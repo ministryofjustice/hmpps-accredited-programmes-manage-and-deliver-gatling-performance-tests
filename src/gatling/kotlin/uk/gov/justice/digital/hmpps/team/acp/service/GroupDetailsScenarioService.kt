@@ -44,77 +44,53 @@ class GroupDetailsScenarioService(
                 // Edit group start date
                 .exec(pageOrchestrationService.getEditGroupStartDatePageAndDoChecks())
                 .pause(pauses.onEditGroupStartDatePage.first, pauses.onEditGroupStartDatePage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupStartDatePageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupStartDatePageAndDoChecks())
                 .pause(pauses.afterEditGroupStartDatePage.first, pauses.afterEditGroupStartDatePage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupStartDateReschedulePageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupStartDateReschedulePageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
                 // Edit group days and times
                 .exec(pageOrchestrationService.getEditGroupDaysAndTimesPageAndDoChecks())
                 .pause(pauses.onEditGroupDaysAndTimesPage.first, pauses.onEditGroupDaysAndTimesPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupDaysAndTimesPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupDaysAndTimesPageAndDoChecks())
                 .pause(pauses.afterEditGroupDaysAndTimesPage.first, pauses.afterEditGroupDaysAndTimesPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupDaysAndTimesReschedulePageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupDaysAndTimesReschedulePageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
                 // Edit group cohort
                 .exec(pageOrchestrationService.getEditGroupCohortPageAndDoChecks())
                 .pause(pauses.onEditGroupCohortPage.first, pauses.onEditGroupCohortPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupCohortPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupCohortPageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
                 // Edit group gender
                 .exec(pageOrchestrationService.getEditGroupGenderPageAndDoChecks())
                 .pause(pauses.onEditGroupGenderPage.first, pauses.onEditGroupGenderPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupGenderPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupGenderPageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
                 // Edit group probation delivery unit
                 .exec(pageOrchestrationService.getEditGroupProbationDeliveryUnitPageAndDoChecks())
                 .pause(pauses.onEditGroupProbationDeliveryUnitPage.first, pauses.onEditGroupProbationDeliveryUnitPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupProbationDeliveryUnitPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupProbationDeliveryUnitPageAndDoChecks())
                 .pause(pauses.afterEditGroupProbationDeliveryUnitPage.first, pauses.afterEditGroupProbationDeliveryUnitPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupDeliveryLocationPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupDeliveryLocationPageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
                 // Edit group delivery location
                 .exec(pageOrchestrationService.getEditGroupDeliveryLocationPageAndDoChecks())
                 .pause(pauses.onEditGroupDeliveryLocationPage.first, pauses.onEditGroupDeliveryLocationPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupDeliveryLocationPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupDeliveryLocationPageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
                 // Edit group treatment manager
                 .exec(pageOrchestrationService.getEditGroupFacilitatorPageAndDoChecks())
                 .pause(pauses.onEditGroupFacilitatorPage.first, pauses.onEditGroupFacilitatorPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupFacilitatorPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupFacilitatorPageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
                 // Edit group facilitators
                 .exec(pageOrchestrationService.getEditGroupFacilitatorPageAndDoChecks())
                 .pause(pauses.onEditGroupFacilitatorPage.first, pauses.onEditGroupFacilitatorPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupFacilitatorPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupFacilitatorPageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
                 // Edit group cover facilitators
                 .exec(pageOrchestrationService.getEditGroupFacilitatorPageAndDoChecks())
                 .pause(pauses.onEditGroupFacilitatorPage.first, pauses.onEditGroupFacilitatorPage.second)
-                .exec { session ->
-                    session.set(GroupDetailsSimulationSession.GROUP_CODE.sessionKey, GroupCodeGenerator.next())
-                }.exec(pageOrchestrationService.postEditGroupFacilitatorPageAndDoChecks())
+                .exec(pageOrchestrationService.postEditGroupFacilitatorPageAndDoChecks())
                 .pause(pauses.onGroupDetailsPage.first, pauses.onGroupDetailsPage.second)
 
         return CoreDsl

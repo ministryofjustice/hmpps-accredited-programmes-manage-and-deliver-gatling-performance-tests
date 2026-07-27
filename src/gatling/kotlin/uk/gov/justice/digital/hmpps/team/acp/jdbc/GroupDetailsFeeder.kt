@@ -20,6 +20,6 @@ class GroupDetailsFeeder(
                 dbConfig.dbUsername,
                 dbConfig.dbPassword,
                 feederQuery,
-            ).random()
+            ).circular()
     }
 }
