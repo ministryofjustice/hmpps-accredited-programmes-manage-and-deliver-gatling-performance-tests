@@ -94,6 +94,12 @@ overridden per-run, e.g.:
 | `schedule_overview_test_duration_minutes`                   | no (default 5)       | Schedule overview test duration in minutes                                                    |
 | `group_allocation_concurrent_users`                         | no (default 1)       | Number of virtual users for the group allocation simulation (see note below on the ceiling)   |
 | `group_allocation_test_duration_minutes`                    | no (default 5)       | Group allocation test duration in minutes                                                     |
+| `case_list_concurrent_users`                        | no (default 2)       | Number of concurrent virtual users for the case list simulation                               |
+| `case_list_test_duration_minutes`                   | no (default 5)       | Case list test duration in minutes                                                            |
+| `create_group_concurrent_users`                     | no (default 1)       | Number of concurrent virtual users for the create group simulation                            |
+| `create_group_test_duration_minutes`                | no (default 5)       | Create group test duration in minutes                                                         |
+| `group_details_concurrent_users`                    | no (default 1)       | Number of concurrent virtual users for the group details simulation                           |
+| `group_details_test_duration_minutes`               | no (default 5)       | Group details test duration in minutes                                                        |
 
 # Troubleshooting
 
