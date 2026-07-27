@@ -22,7 +22,7 @@ class GroupAllocationPageOrchestrationService(
 
     private fun redirectedTo(path: String): CheckBuilder =
         HttpDsl
-            .currentLocationRegex("$path(\\?.*)?$")
+            .currentLocationRegex("${Regex.escape(path)}(\\?.*)?$")
             .find()
             .exists()
 
