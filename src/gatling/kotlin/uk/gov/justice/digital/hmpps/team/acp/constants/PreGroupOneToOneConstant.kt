@@ -15,7 +15,7 @@ val preGroupOneToOnePauseConfig =
         afterScheduleSessionTypePage = 5L to 10L,
         onScheduleSessionDetailsPage = 6L to 11L,
         afterScheduleSessionDetailsPage = 7L to 12L,
-        onReviewYourSessionDetailsPage = 8L to 13L
+        onReviewYourSessionDetailsPage = 8L to 13L,
     )
 const val PRE_GROUP_ONE_TO_ONE_SESSION_ID: String = "33a740fb-a7b0-42e3-ba6b-e2b3ec25c795"
 const val PRE_GROUP_ONE_TO_ONE_SESSION: String = "1bcaf371-e624-4034-a13b-5ae2e9921bd4+SCHEDULED+Pre-group one-to-one+ONE_TO_ONE"
