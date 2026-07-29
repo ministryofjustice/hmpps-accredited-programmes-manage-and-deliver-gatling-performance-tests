@@ -247,7 +247,7 @@ class CreateGroupPageOrchestrationService(
                     .find()
                     .`is` { session ->
                         val groupCode = session.getString(CreateGroupSimulationSession.GROUP_CODE.sessionKey)
-                        "Group $groupCode created"
+                        "Group $groupCode created."
                     },
             )
 }
