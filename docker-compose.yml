@@ -98,7 +98,7 @@ services:
       postgresql:
         condition: service_healthy
       localstack:
-        condition: service_started
+        condition: service_healthy
 
   hmpps-accredited-programmes-manage-and-deliver-ui:
     image: ghcr.io/ministryofjustice/hmpps-accredited-programmes-manage-and-deliver-ui:latest

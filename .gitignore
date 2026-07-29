@@ -87,3 +87,5 @@ seed/**
 
 # Git patch files
 *.patch
+
+wiremock_mappings/seeded/
