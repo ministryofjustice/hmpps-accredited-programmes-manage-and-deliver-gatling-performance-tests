@@ -3,24 +3,21 @@ package uk.gov.justice.digital.hmpps.team.acp.service
 import io.gatling.javaapi.core.CheckBuilder
 import io.gatling.javaapi.core.CoreDsl
 import io.gatling.javaapi.http.HttpDsl
-import uk.gov.justice.digital.hmpps.team.acp.helper.PreGroupOneToOneSelectors
-import uk.gov.justice.digital.hmpps.team.acp.model.PreGroupOneToOneSimulationSession
-import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_ID
 import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION
 import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_DATE
-import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_START_TIME_HOUR
-import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_START_TIME_PART_OF_DAY
+import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_DETAILS_FACILITATOR
+import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_DETAILS_WHO
 import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_END_TIME_HOUR
 import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_END_TIME_PART_OF_DAY
-import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_DETAILS_WHO
-import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_DETAILS_FACILITATOR
-
-
+import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_ID
+import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_START_TIME_HOUR
+import uk.gov.justice.digital.hmpps.team.acp.constants.PRE_GROUP_ONE_TO_ONE_SESSION_START_TIME_PART_OF_DAY
 import uk.gov.justice.digital.hmpps.team.acp.helper.AcpSelectorHelper
-
+import uk.gov.justice.digital.hmpps.team.acp.helper.PreGroupOneToOneSelectors
+import uk.gov.justice.digital.hmpps.team.acp.model.PreGroupOneToOneSimulationSession
 
 class PreGroupOneToOnePageOrchestrationService(
-    private val acpSelectorHelper: AcpSelectorHelper = AcpSelectorHelper()
+    private val acpSelectorHelper: AcpSelectorHelper = AcpSelectorHelper(),
 ) {
     private val preGroupOneToOneSessionId: String = PRE_GROUP_ONE_TO_ONE_SESSION_ID
 
@@ -42,16 +39,16 @@ class PreGroupOneToOnePageOrchestrationService(
             )
 
     fun getScheduleSessionTypePageAndDoChecks() =
-    HttpDsl
-        .http("GET - Which session are you scheduling? Page")
-        .get { session ->
-            val groupId = session.getString(PreGroupOneToOneSimulationSession.GROUP_ID.sessionKey)
-             "/$groupId/$preGroupOneToOneSessionId/schedule-session-type"
-        }.check(
-            HttpDsl.status().`is` { 200 },
-            CoreDsl.css("h1:contains('Which session are you scheduling?')").exists(),
-            acpSelectorHelper.getCsrfHiddenFieldValue(PreGroupOneToOneSimulationSession.CSRF_TOKEN_VALUE.sessionKey)
-        )
+        HttpDsl
+            .http("GET - Which session are you scheduling? Page")
+            .get { session ->
+                val groupId = session.getString(PreGroupOneToOneSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/$preGroupOneToOneSessionId/schedule-session-type"
+            }.check(
+                HttpDsl.status().`is` { 200 },
+                CoreDsl.css("h1:contains('Which session are you scheduling?')").exists(),
+                acpSelectorHelper.getCsrfHiddenFieldValue(PreGroupOneToOneSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
+            )
 
     fun postScheduleSessionTypePageAndDoChecks() =
         HttpDsl
@@ -63,19 +60,21 @@ class PreGroupOneToOnePageOrchestrationService(
             .formParam("session-template", PRE_GROUP_ONE_TO_ONE_SESSION)
             .check(
                 HttpDsl.status().`is` { 200 },
-                redirectedTo("#{${PreGroupOneToOneSimulationSession.GROUP_ID.sessionKey}}/$preGroupOneToOneSessionId/schedule-session-details")
+                redirectedTo(
+                    "#{${PreGroupOneToOneSimulationSession.GROUP_ID.sessionKey}}/$preGroupOneToOneSessionId/schedule-session-details",
+                ),
             )
 
     fun getScheduleSessionDetailsPageAndDoChecks() =
         HttpDsl
             .http("GET - Add session details Page")
             .get { session ->
-                 val groupId = session.getString(PreGroupOneToOneSimulationSession.GROUP_ID.sessionKey)
-                 "/$groupId/$preGroupOneToOneSessionId/schedule-session-details"
+                val groupId = session.getString(PreGroupOneToOneSimulationSession.GROUP_ID.sessionKey)
+                "/$groupId/$preGroupOneToOneSessionId/schedule-session-details"
             }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1:contains('Add session details')").exists(),
-                acpSelectorHelper.getCsrfHiddenFieldValue(PreGroupOneToOneSimulationSession.CSRF_TOKEN_VALUE.sessionKey)
+                acpSelectorHelper.getCsrfHiddenFieldValue(PreGroupOneToOneSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 
     fun postScheduleSessionDetailsPageAndDoChecks() =
@@ -94,8 +93,11 @@ class PreGroupOneToOnePageOrchestrationService(
             .formParam("session-details-facilitator-0", PRE_GROUP_ONE_TO_ONE_SESSION_DETAILS_FACILITATOR)
             .check(
                 HttpDsl.status().`is` { 200 },
-                 redirectedTo("#{${PreGroupOneToOneSimulationSession.GROUP_ID.sessionKey}}/$preGroupOneToOneSessionId/session-review-details")
+                redirectedTo(
+                    "#{${PreGroupOneToOneSimulationSession.GROUP_ID.sessionKey}}/$preGroupOneToOneSessionId/session-review-details",
+                ),
             )
+
     fun getReviewYourSessionDetailsPageAndDoChecks() =
         HttpDsl
             .http("GET - Review your session details Page")
@@ -105,7 +107,6 @@ class PreGroupOneToOnePageOrchestrationService(
             }.check(
                 HttpDsl.status().`is` { 200 },
                 CoreDsl.css("h1:contains('Review your session details')").exists(),
-                acpSelectorHelper.getCsrfHiddenFieldValue(PreGroupOneToOneSimulationSession.CSRF_TOKEN_VALUE.sessionKey)
+                acpSelectorHelper.getCsrfHiddenFieldValue(PreGroupOneToOneSimulationSession.CSRF_TOKEN_VALUE.sessionKey),
             )
 }
-

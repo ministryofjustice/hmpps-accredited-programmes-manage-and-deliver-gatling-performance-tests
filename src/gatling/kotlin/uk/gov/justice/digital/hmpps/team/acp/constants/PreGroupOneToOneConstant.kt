@@ -25,4 +25,6 @@ const val PRE_GROUP_ONE_TO_ONE_SESSION_START_TIME_PART_OF_DAY: String = "PM"
 const val PRE_GROUP_ONE_TO_ONE_SESSION_END_TIME_HOUR: String = "3"
 const val PRE_GROUP_ONE_TO_ONE_SESSION_END_TIME_PART_OF_DAY: String = "PM"
 const val PRE_GROUP_ONE_TO_ONE_SESSION_DETAILS_WHO: String = "fc2e8364-3fd9-4686-98a7-efd1dbaf3b82 + Craig Kuhic"
-const val PRE_GROUP_ONE_TO_ONE_SESSION_DETAILS_FACILITATOR: String = "{\"facilitator\":\"Unallocated Staff\", \"facilitatorCode\":\"N50HHIU\", \"teamName\":\"HMP Hindley\", \"teamCode\":\"N50HHI\"}"
+const val PRE_GROUP_ONE_TO_ONE_SESSION_DETAILS_FACILITATOR: String =
+    "{\"facilitator\":\"Unallocated Staff\"," +
+        "\"facilitatorCode\":\"N50HHIU\", \"teamName\":\"HMP Hindley\", \"teamCode\":\"N50HHI\"}"

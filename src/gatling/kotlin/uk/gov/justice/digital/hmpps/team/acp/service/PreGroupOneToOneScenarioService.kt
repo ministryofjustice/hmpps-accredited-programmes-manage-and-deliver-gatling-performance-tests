@@ -10,7 +10,6 @@ import uk.gov.justice.digital.hmpps.team.acp.model.PreGroupOneToOnePauseConfig
 import java.time.Duration
 
 class PreGroupOneToOneScenarioService(
-
     private val preGroupOneToOneFeeder: PreGroupOneToOneFeeder = PreGroupOneToOneFeeder(),
     private val httpRequestHelper: HttpRequestHelper = HttpRequestHelper(),
     private val signInService: SignInService = SignInService(),

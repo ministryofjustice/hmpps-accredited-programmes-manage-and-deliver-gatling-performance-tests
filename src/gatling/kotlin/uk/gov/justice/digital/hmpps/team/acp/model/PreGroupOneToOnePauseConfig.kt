@@ -8,6 +8,4 @@ data class PreGroupOneToOnePauseConfig(
     val onScheduleSessionDetailsPage: Pair<Long, Long>,
     val afterScheduleSessionDetailsPage: Pair<Long, Long>,
     val onReviewYourSessionDetailsPage: Pair<Long, Long>,
-
-
-    )
+)
