@@ -72,6 +72,20 @@ overridden per-run, e.g.:
 ./gradlew gatlingRun --simulation uk.gov.justice.digital.hmpps.team.acp.simulations.CaseListSimulation -Dcase_list_concurrent_users=5 -Dcase_list_test_duration_minutes=10
 ```
 
+## Full simulation
+
+`FullSimulation` runs every scenario (case list, create group, group allocation, group details and
+schedule overview) together in a single run to load test the whole application at once. Each scenario
+keeps its own user-count setting (`*_concurrent_users` / `group_allocation_concurrent_users`) but they
+all share the same duration, controlled by `full_simulation_test_duration_minutes`.
+
+A shared run configuration **Gatling: FullSimulation** is committed in `.run/`, or run it from the
+command line:
+
+```
+./gradlew gatlingRun --simulation uk.gov.justice.digital.hmpps.team.acp.simulations.FullSimulation
+```
+
 ## Available settings
 
 | Key                                                         | Required             | Description                                                                                   |
@@ -94,12 +108,10 @@ overridden per-run, e.g.:
 | `schedule_overview_test_duration_minutes`                   | no (default 5)       | Schedule overview test duration in minutes                                                    |
 | `group_allocation_concurrent_users`                         | no (default 1)       | Number of virtual users for the group allocation simulation (see note below on the ceiling)   |
 | `group_allocation_test_duration_minutes`                    | no (default 5)       | Group allocation test duration in minutes                                                     |
-| `case_list_concurrent_users`                        | no (default 2)       | Number of concurrent virtual users for the case list simulation                               |
-| `case_list_test_duration_minutes`                   | no (default 5)       | Case list test duration in minutes                                                            |
-| `create_group_concurrent_users`                     | no (default 1)       | Number of concurrent virtual users for the create group simulation                            |
-| `create_group_test_duration_minutes`                | no (default 5)       | Create group test duration in minutes                                                         |
-| `group_details_concurrent_users`                    | no (default 1)       | Number of concurrent virtual users for the group details simulation                           |
-| `group_details_test_duration_minutes`               | no (default 5)       | Group details test duration in minutes                                                        |
+| `group_details_concurrent_users`                            | no (default 1)       | Number of concurrent virtual users for the group details simulation                           |
+| `group_details_test_duration_minutes`                       | no (default 5)       | Group details test duration in minutes                                                        |
+| `full_simulation_test_duration_minutes`                     | no (default 5)       | Duration in minutes for the full simulation (applied to every scenario within it)             |
+| `region_name`                                               | no (default `Greater Manchester`) | Region the JDBC feeders query for referrals, groups and allocations              |
 
 # Troubleshooting
 

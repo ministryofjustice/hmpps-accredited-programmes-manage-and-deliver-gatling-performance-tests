@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.team.acp.jdbc
 import io.gatling.javaapi.core.FeederBuilder
 import io.gatling.javaapi.jdbc.JdbcDsl
 import uk.gov.justice.digital.hmpps.config.DbConfig
+import uk.gov.justice.digital.hmpps.team.acp.constants.REGION_NAME
 import uk.gov.justice.digital.hmpps.team.acp.model.CaseListSimulationSession
 
 class CaseListFeeder(
@@ -12,7 +13,7 @@ class CaseListFeeder(
         val feederQuery = """select rciv.id as ${CaseListSimulationSession.REFERRAL_ID.sessionKey},
             rciv.person_name as ${CaseListSimulationSession.REFERRAL_NAME.sessionKey}
             from referral_caselist_item_view rciv
-            where rciv.region_name = 'Greater Manchester'
+            where rciv.region_name = '${REGION_NAME}'
             """
 
         return JdbcDsl

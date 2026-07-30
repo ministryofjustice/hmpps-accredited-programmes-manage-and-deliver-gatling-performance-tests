@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.team.acp.jdbc
 import io.gatling.javaapi.core.FeederBuilder
 import io.gatling.javaapi.jdbc.JdbcDsl
 import uk.gov.justice.digital.hmpps.config.DbConfig
+import uk.gov.justice.digital.hmpps.team.acp.constants.REGION_NAME
 import uk.gov.justice.digital.hmpps.team.acp.model.GroupAllocationSimulationSession
 
 class GroupAllocationFeeder(
@@ -19,7 +20,7 @@ class GroupAllocationFeeder(
              AND pg.deleted_at IS NULL
             WHERE gwiv.status = 'Awaiting allocation'
               AND gwiv.active_programme_group_id IS NULL
-              AND gwiv.region_name = 'Greater Manchester'
+              AND gwiv.region_name = '${REGION_NAME}'
             ORDER BY gwiv.referral_id, random()
             """
 
